@@ -67,6 +67,7 @@ let all_actions () =
   pfff_extra_actions() @
   Test_parsing_c.actions()@
   Test_parsing_cpp.actions()@
+  Generate_nim.actions()@
 
 (*
   Test_analyze_cpp.actions () ++

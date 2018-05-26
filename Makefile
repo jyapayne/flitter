@@ -19,7 +19,7 @@ TARGET=pfff
 
 PROGS=pfff
 
-#PROGS+=pfff_test
+PROGS+=pfff_test
 
 OPTPROGS= $(PROGS:=.opt)
 
@@ -59,7 +59,8 @@ BASICLIBS=commons/commons.cma \
  globals/lib.cma \
  h_program-lang/lib.cma \
  lang_cpp/parsing/lib.cma \
- lang_c/parsing/lib.cma
+ lang_c/parsing/lib.cma \
+ generators/nim/lib.cma
 
 #       commons/commons_features.cma \
 
@@ -75,6 +76,7 @@ LIBS= commons/commons.cma \
 	h_program-lang/lib.cma \
     lang_cpp/parsing/lib.cma \
     lang_c/parsing/lib.cma \
+    generators/nim/lib.cma
 
 MAKESUBDIRS=commons commons_core \
   $(JSONDIR) \
@@ -83,6 +85,7 @@ MAKESUBDIRS=commons commons_core \
   h_program-lang \
   lang_cpp/parsing \
   lang_c/parsing \
+  generators/nim
 
 INCLUDEDIRS=$(MAKESUBDIRS)
 

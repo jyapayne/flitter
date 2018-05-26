@@ -845,7 +845,7 @@ and process_declaration =
   | NameSpaceAnon ((v1, v2)) ->
       (*let v1 = vof_tok v1
       and v2 = vof_brace (Ocaml.vof_list vof_declaration_sequencable) v2
-      in Ocaml.VSum (("NameSpaceAnon", [ v1; v2 ]))*)
+      in Ocaml.VSu:m (("NameSpaceAnon", [ v1; v2 ]))*)
     ""
   | EmptyDef def -> process_token def
   | DeclTodo -> "# TODO"
@@ -864,8 +864,19 @@ and process_toplevel = function
 let iter_ast ast =
   List.map process_toplevel ast
 
-let test_dump_nim file =
-  Parse_cpp.init_defs !Flag.macros_h;
-  let ast = Parse_cpp.parse_program file in
+let generate_nim cfile macro_files =
+  Parse_cpp.init_defs cfile;
+  List.iter Parse_cpp.add_defs macro_files;
+  let ast = Parse_cpp.parse_program cfile in
   let res = iter_ast ast in
-  List.iter pr res
+  String.concat "\n" res
+
+let test_gen_nim file =
+  let macro_list = [!Flag.macros_h] in
+  let nim_str = generate_nim file macro_list in
+  pr nim_str
+
+let actions () = [
+    "-generate-nim", "   <file>",
+    Common.mk_action_1_arg test_gen_nim;
+]

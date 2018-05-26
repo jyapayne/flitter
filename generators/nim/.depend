@@ -1,0 +1,14 @@
+generate_nim.cmo : ../../h_program-lang/parse_info.cmi \
+    ../../lang_cpp/parsing/parse_cpp.cmi \
+    ../../lang_cpp/parsing/flag_parsing_cpp.cmo ../../commons/common.cmi \
+    ../../lang_cpp/parsing/ast_cpp.cmo generate_nim.cmi
+generate_nim.cmx : ../../h_program-lang/parse_info.cmx \
+    ../../lang_cpp/parsing/parse_cpp.cmx \
+    ../../lang_cpp/parsing/flag_parsing_cpp.cmx ../../commons/common.cmx \
+    ../../lang_cpp/parsing/ast_cpp.cmx generate_nim.cmi
+generate_nim.cmi : ../../commons/common.cmi
+unit_generate_nim.cmo : ../../commons/oUnit.cmi generate_nim.cmi \
+    ../../commons/common.cmi unit_generate_nim.cmi
+unit_generate_nim.cmx : ../../commons/oUnit.cmx generate_nim.cmx \
+    ../../commons/common.cmx unit_generate_nim.cmi
+unit_generate_nim.cmi : ../../commons/oUnit.cmi

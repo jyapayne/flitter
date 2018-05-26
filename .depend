@@ -1,0 +1,21 @@
+find_source.cmo : h_program-lang/skip_code.cmi \
+    lang_cpp/parsing/lib_parsing_cpp.cmi lang_c/parsing/lib_parsing_c.cmi \
+    commons/common.cmi find_source.cmi
+find_source.cmx : h_program-lang/skip_code.cmx \
+    lang_cpp/parsing/lib_parsing_cpp.cmx lang_c/parsing/lib_parsing_c.cmx \
+    commons/common.cmx find_source.cmi
+find_source.cmi : commons/common.cmi
+main.cmo : lang_cpp/parsing/test_parsing_cpp.cmi \
+    lang_c/parsing/test_parsing_c.cmi external/jsonwheel/json_io.cmi \
+    external/jsonwheel/json_in.cmo generators/nim/generate_nim.cmi \
+    lang_cpp/parsing/flag_parsing_cpp.cmo globals/config_pfff.cmo \
+    commons/common2.cmi commons/common.cmi
+main.cmx : lang_cpp/parsing/test_parsing_cpp.cmx \
+    lang_c/parsing/test_parsing_c.cmx external/jsonwheel/json_io.cmx \
+    external/jsonwheel/json_in.cmx generators/nim/generate_nim.cmx \
+    lang_cpp/parsing/flag_parsing_cpp.cmx globals/config_pfff.cmx \
+    commons/common2.cmx commons/common.cmx
+main_test.cmo : generators/nim/unit_generate_nim.cmi commons/oUnit.cmi \
+    globals/config_pfff.cmo commons/common2.cmi commons/common.cmi
+main_test.cmx : generators/nim/unit_generate_nim.cmx commons/oUnit.cmx \
+    globals/config_pfff.cmx commons/common2.cmx commons/common.cmx

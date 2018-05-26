@@ -19,7 +19,6 @@ SRC= flag_parsing_cpp.ml \
      parsing_hacks.ml \
      parsing_recovery_cpp.ml \
      parse_cpp.ml \
-	 test_dump_nim.ml \
      test_parsing_cpp.ml unit_parsing_cpp.ml
 
 SYSLIBS= str.cma unix.cma 

@@ -14,3 +14,5 @@ S lang_c/**
 B lang_c/**
 S lang_cpp/**
 B lang_cpp/**
+S generators/**
+B generators/**

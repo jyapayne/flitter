@@ -2,7 +2,7 @@ let version = "0.29"
 
 let path =
   try (Sys.getenv "PFFF_HOME")
-  with Not_found->"/usr/local/share/pfff"
+  with Not_found->"./"
 
 let std_xxx = ref (Filename.concat path "xxx.yyy")
 

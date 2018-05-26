@@ -99,9 +99,6 @@ let actions () = [
     "-dump_cpp", "   <file>",
     Common.mk_action_1_arg test_dump_cpp;
 
-    "-dump_nim", "   <file>",
-    Common.mk_action_1_arg Test_dump_nim.test_dump_nim;
-
     "-dump_cpp_full", "   <file>",
     Common.mk_action_1_arg test_dump_cpp_full;
     "-dump_cpp_view", "   <file>",

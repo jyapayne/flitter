@@ -2,6 +2,8 @@
 *.cmo
 *.cma
 *.cmi
+*.cmti
+*.cmt
 *.a
 *.o
 *.cmx
@@ -18,9 +20,6 @@ _build/
 # oasis generated files
 setup.data
 setup.log
-
-# Merlin configuring file for Vim and Emacs
-.merlin
 
 # Swap
 [._]*.s[a-v][a-z]

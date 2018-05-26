@@ -135,25 +135,18 @@ pp_token.cmx : token_views_cpp.cmx token_helpers_cpp.cmx token_cpp.cmx \
     ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
     pp_token.cmi
 pp_token.cmi : token_views_cpp.cmi parser_cpp.cmi ../../commons/common.cmi
-test_dump_nim.cmo : ../../h_program-lang/parse_info.cmi parse_cpp.cmi \
-    flag_parsing_cpp.cmo ../../commons/common.cmi ast_cpp.cmo \
-    test_dump_nim.cmi
-test_dump_nim.cmx : ../../h_program-lang/parse_info.cmx parse_cpp.cmx \
-    flag_parsing_cpp.cmx ../../commons/common.cmx ast_cpp.cmx \
-    test_dump_nim.cmi
-test_dump_nim.cmi : ../../commons/common.cmi
 test_parsing_cpp.cmo : token_views_cpp.cmi token_views_context.cmi \
-    token_helpers_cpp.cmi test_dump_nim.cmi \
-    ../../h_program-lang/skip_code.cmi parsing_hacks_cpp.cmi parser_cpp.cmi \
-    ../../h_program-lang/parse_info.cmi parse_cpp.cmi ../../commons/ocaml.cmi \
+    token_helpers_cpp.cmi ../../h_program-lang/skip_code.cmi \
+    parsing_hacks_cpp.cmi parser_cpp.cmi ../../h_program-lang/parse_info.cmi \
+    parse_cpp.cmi ../../commons/ocaml.cmi \
     ../../h_program-lang/meta_ast_generic.cmi meta_ast_cpp.cmi \
     lib_parsing_cpp.cmi flag_parsing_cpp.cmo ../../commons_core/console.cmi \
     ../../commons/common.cmi ../../h_program-lang/ast_fuzzy.cmi ast_cpp.cmo \
     test_parsing_cpp.cmi
 test_parsing_cpp.cmx : token_views_cpp.cmx token_views_context.cmx \
-    token_helpers_cpp.cmx test_dump_nim.cmx \
-    ../../h_program-lang/skip_code.cmx parsing_hacks_cpp.cmx parser_cpp.cmx \
-    ../../h_program-lang/parse_info.cmx parse_cpp.cmx ../../commons/ocaml.cmx \
+    token_helpers_cpp.cmx ../../h_program-lang/skip_code.cmx \
+    parsing_hacks_cpp.cmx parser_cpp.cmx ../../h_program-lang/parse_info.cmx \
+    parse_cpp.cmx ../../commons/ocaml.cmx \
     ../../h_program-lang/meta_ast_generic.cmx meta_ast_cpp.cmx \
     lib_parsing_cpp.cmx flag_parsing_cpp.cmx ../../commons_core/console.cmx \
     ../../commons/common.cmx ../../h_program-lang/ast_fuzzy.cmx ast_cpp.cmx \
