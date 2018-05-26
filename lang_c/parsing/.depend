@@ -1,0 +1,49 @@
+ast_c.cmo : ../../commons/common2.cmi ../../commons/common.cmi \
+    ../../lang_cpp/parsing/ast_cpp.cmo
+ast_c.cmx : ../../commons/common2.cmx ../../commons/common.cmx \
+    ../../lang_cpp/parsing/ast_cpp.cmx
+ast_c_simple_build.cmo : ../../h_program-lang/parse_info.cmi \
+    ../../commons/ocaml.cmi ../../lang_cpp/parsing/meta_ast_cpp.cmi \
+    ../../commons/common2.cmi ../../commons/common.cmi \
+    ../../lang_cpp/parsing/ast_cpp.cmo ast_c.cmo ast_c_simple_build.cmi
+ast_c_simple_build.cmx : ../../h_program-lang/parse_info.cmx \
+    ../../commons/ocaml.cmx ../../lang_cpp/parsing/meta_ast_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx \
+    ../../lang_cpp/parsing/ast_cpp.cmx ast_c.cmx ast_c_simple_build.cmi
+ast_c_simple_build.cmi : ../../h_program-lang/parse_info.cmi \
+    ../../lang_cpp/parsing/ast_cpp.cmo ast_c.cmo
+lib_parsing_c.cmo : visitor_c.cmo ../../commons/file_type.cmi \
+    ../../commons/common.cmi lib_parsing_c.cmi
+lib_parsing_c.cmx : visitor_c.cmx ../../commons/file_type.cmx \
+    ../../commons/common.cmx lib_parsing_c.cmi
+lib_parsing_c.cmi : ../../h_program-lang/parse_info.cmi \
+    ../../commons/common.cmi ast_c.cmo
+meta_ast_c.cmo : ../../h_program-lang/parse_info.cmi ../../commons/ocaml.cmi \
+    ../../lang_cpp/parsing/ast_cpp.cmo ast_c.cmo meta_ast_c.cmi
+meta_ast_c.cmx : ../../h_program-lang/parse_info.cmx ../../commons/ocaml.cmx \
+    ../../lang_cpp/parsing/ast_cpp.cmx ast_c.cmx meta_ast_c.cmi
+meta_ast_c.cmi : ../../commons/ocaml.cmi ast_c.cmo
+parse_c.cmo : ../../lang_cpp/parsing/parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi ../../lang_cpp/parsing/parse_cpp.cmi \
+    ../../lang_cpp/parsing/flag_parsing_cpp.cmo ../../commons/common2.cmi \
+    ../../commons/common.cmi ast_c_simple_build.cmi ast_c.cmo parse_c.cmi
+parse_c.cmx : ../../lang_cpp/parsing/parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx ../../lang_cpp/parsing/parse_cpp.cmx \
+    ../../lang_cpp/parsing/flag_parsing_cpp.cmx ../../commons/common2.cmx \
+    ../../commons/common.cmx ast_c_simple_build.cmx ast_c.cmx parse_c.cmi
+parse_c.cmi : ../../lang_cpp/parsing/parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi ../../commons/common.cmi ast_c.cmo
+test_parsing_c.cmo : ../../h_program-lang/parse_info.cmi parse_c.cmi \
+    ../../commons/ocaml.cmi meta_ast_c.cmi lib_parsing_c.cmi \
+    ../../commons/common.cmi test_parsing_c.cmi
+test_parsing_c.cmx : ../../h_program-lang/parse_info.cmx parse_c.cmx \
+    ../../commons/ocaml.cmx meta_ast_c.cmx lib_parsing_c.cmx \
+    ../../commons/common.cmx test_parsing_c.cmi
+test_parsing_c.cmi : ../../commons/common.cmi
+unit_parsing_c.cmo : unit_parsing_c.cmi
+unit_parsing_c.cmx : unit_parsing_c.cmi
+unit_parsing_c.cmi :
+visitor_c.cmo : ../../commons/ocaml.cmi ../../lang_cpp/parsing/ast_cpp.cmo \
+    ast_c.cmo
+visitor_c.cmx : ../../commons/ocaml.cmx ../../lang_cpp/parsing/ast_cpp.cmx \
+    ast_c.cmx

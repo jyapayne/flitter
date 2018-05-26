@@ -1,0 +1,132 @@
+archi_code.cmo : ../commons/common2.cmi ../commons/common.cmi archi_code.cmi
+archi_code.cmx : ../commons/common2.cmx ../commons/common.cmx archi_code.cmi
+archi_code.cmi : ../commons/common.cmi
+archi_code_lexer.cmo : archi_code.cmi
+archi_code_lexer.cmx : archi_code.cmx
+archi_code_parse.cmo : ../commons/common2.cmi ../commons/common.cmi \
+    archi_code_lexer.cmo archi_code.cmi archi_code_parse.cmi
+archi_code_parse.cmx : ../commons/common2.cmx ../commons/common.cmx \
+    archi_code_lexer.cmx archi_code.cmx archi_code_parse.cmi
+archi_code_parse.cmi : ../commons/common.cmi archi_code.cmi
+ast_fuzzy.cmo : parse_info.cmi ../commons/ocaml.cmi ../commons/common.cmi \
+    ast_fuzzy.cmi
+ast_fuzzy.cmx : parse_info.cmx ../commons/ocaml.cmx ../commons/common.cmx \
+    ast_fuzzy.cmi
+ast_fuzzy.cmi : parse_info.cmi ../commons/ocaml.cmi ../commons/common.cmi
+big_grep.cmo : database_code.cmi ../commons/common2.cmi \
+    ../commons/common.cmi big_grep.cmi
+big_grep.cmx : database_code.cmx ../commons/common2.cmx \
+    ../commons/common.cmx big_grep.cmi
+big_grep.cmi : database_code.cmi
+comment_code.cmo : parse_info.cmi ../commons/common2.cmi \
+    ../commons/common.cmi comment_code.cmi
+comment_code.cmx : parse_info.cmx ../commons/common2.cmx \
+    ../commons/common.cmx comment_code.cmi
+comment_code.cmi : parse_info.cmi
+coverage_code.cmo : ../external/jsonwheel/json_type.cmi \
+    ../external/jsonwheel/json_out.cmo ../external/jsonwheel/json_in.cmo \
+    ../commons/common.cmi coverage_code.cmi
+coverage_code.cmx : ../external/jsonwheel/json_type.cmx \
+    ../external/jsonwheel/json_out.cmx ../external/jsonwheel/json_in.cmx \
+    ../commons/common.cmx coverage_code.cmi
+coverage_code.cmi : ../external/jsonwheel/json_type.cmi \
+    ../commons/common.cmi
+database_code.cmo : ../external/jsonwheel/json_type.cmi \
+    ../external/jsonwheel/json_io.cmi ../external/jsonwheel/json_in.cmo \
+    highlight_code.cmi ../commons/file_type.cmi entity_code.cmi \
+    ../commons/common2.cmi ../commons/common.cmi database_code.cmi
+database_code.cmx : ../external/jsonwheel/json_type.cmx \
+    ../external/jsonwheel/json_io.cmx ../external/jsonwheel/json_in.cmx \
+    highlight_code.cmx ../commons/file_type.cmx entity_code.cmx \
+    ../commons/common2.cmx ../commons/common.cmx database_code.cmi
+database_code.cmi : highlight_code.cmi entity_code.cmi \
+    ../commons/common2.cmi ../commons/common.cmi
+datalog_code.cmo : ../commons/common2.cmi ../commons/common.cmi \
+    datalog_code.cmi
+datalog_code.cmx : ../commons/common2.cmx ../commons/common.cmx \
+    datalog_code.cmi
+datalog_code.cmi : ../commons/common.cmi
+entity_code.cmo : ../commons/common.cmi entity_code.cmi
+entity_code.cmx : ../commons/common.cmx entity_code.cmi
+entity_code.cmi :
+errors_code.cmo : scope_code.cmi parse_info.cmi entity_code.cmi \
+    ../commons/common2.cmi ../commons/common.cmi errors_code.cmi
+errors_code.cmx : scope_code.cmx parse_info.cmx entity_code.cmx \
+    ../commons/common2.cmx ../commons/common.cmx errors_code.cmi
+errors_code.cmi : scope_code.cmi parse_info.cmi entity_code.cmi \
+    ../commons/common.cmi
+highlight_code.cmo : entity_code.cmi ../commons/common.cmi \
+    highlight_code.cmi
+highlight_code.cmx : entity_code.cmx ../commons/common.cmx \
+    highlight_code.cmi
+highlight_code.cmi : entity_code.cmi
+info_code.cmo : ../h_files-format/outline.cmi info_code.cmi
+info_code.cmx : ../h_files-format/outline.cmx info_code.cmi
+info_code.cmi : ../h_files-format/outline.cmi ../commons/common.cmi
+layer_code.cmo : parse_info.cmi ../commons/ocaml.cmi \
+    ../external/jsonwheel/json_type.cmi ../external/jsonwheel/json_out.cmo \
+    ../external/jsonwheel/json_in.cmo ../commons/file_type.cmi \
+    ../commons/common2.cmi ../commons/common.cmi layer_code.cmi
+layer_code.cmx : parse_info.cmx ../commons/ocaml.cmx \
+    ../external/jsonwheel/json_type.cmx ../external/jsonwheel/json_out.cmx \
+    ../external/jsonwheel/json_in.cmx ../commons/file_type.cmx \
+    ../commons/common2.cmx ../commons/common.cmx layer_code.cmi
+layer_code.cmi : parse_info.cmi ../external/jsonwheel/json_type.cmi \
+    ../commons/common.cmi
+layer_coverage.cmo : layer_code.cmi coverage_code.cmi ../commons/common2.cmi \
+    ../commons/common.cmi layer_coverage.cmi
+layer_coverage.cmx : layer_code.cmx coverage_code.cmx ../commons/common2.cmx \
+    ../commons/common.cmx layer_coverage.cmi
+layer_coverage.cmi : layer_code.cmi coverage_code.cmi ../commons/common.cmi
+layer_parse_errors.cmo : parse_info.cmi layer_code.cmi \
+    ../commons/common2.cmi ../commons/common.cmi layer_parse_errors.cmi
+layer_parse_errors.cmx : parse_info.cmx layer_code.cmx \
+    ../commons/common2.cmx ../commons/common.cmx layer_parse_errors.cmi
+layer_parse_errors.cmi : parse_info.cmi layer_code.cmi ../commons/common.cmi
+meta_ast_generic.cmo : meta_ast_generic.cmi
+meta_ast_generic.cmx : meta_ast_generic.cmi
+meta_ast_generic.cmi :
+overlay_code.cmo : layer_code.cmi database_code.cmi ../commons/common2.cmi \
+    ../commons/common.cmi overlay_code.cmi
+overlay_code.cmx : layer_code.cmx database_code.cmx ../commons/common2.cmx \
+    ../commons/common.cmx overlay_code.cmi
+overlay_code.cmi : layer_code.cmi database_code.cmi ../commons/common.cmi
+parse_info.cmo : ../commons/ocaml.cmi ../commons/common2.cmi \
+    ../commons/common.cmi parse_info.cmi
+parse_info.cmx : ../commons/ocaml.cmx ../commons/common2.cmx \
+    ../commons/common.cmx parse_info.cmi
+parse_info.cmi : ../commons/ocaml.cmi ../commons/common.cmi
+pleac.cmo : ../commons/common2.cmi ../commons/common.cmi pleac.cmi
+pleac.cmx : ../commons/common2.cmx ../commons/common.cmx pleac.cmi
+pleac.cmi : ../commons/common.cmi
+pretty_print_code.cmo : ../commons/common2.cmi
+pretty_print_code.cmx : ../commons/common2.cmx
+prolog_code.cmo : entity_code.cmi ../commons/common.cmi prolog_code.cmi
+prolog_code.cmx : entity_code.cmx ../commons/common.cmx prolog_code.cmi
+prolog_code.cmi : entity_code.cmi ../commons/common.cmi
+refactoring_code.cmo : ../commons/common.cmi refactoring_code.cmi
+refactoring_code.cmx : ../commons/common.cmx refactoring_code.cmi
+refactoring_code.cmi : ../commons/common.cmi
+scope_code.cmo : ../commons/ocaml.cmi scope_code.cmi
+scope_code.cmx : ../commons/ocaml.cmx scope_code.cmi
+scope_code.cmi : ../commons/ocaml.cmi
+skip_code.cmo : ../commons/common2.cmi ../commons/common.cmi skip_code.cmi
+skip_code.cmx : ../commons/common2.cmx ../commons/common.cmx skip_code.cmi
+skip_code.cmi : ../commons/common.cmi
+tags_file.cmo : parse_info.cmi entity_code.cmi ../commons/common.cmi \
+    tags_file.cmi
+tags_file.cmx : parse_info.cmx entity_code.cmx ../commons/common.cmx \
+    tags_file.cmi
+tags_file.cmi : parse_info.cmi entity_code.cmi ../commons/common.cmi
+test_program_lang.cmo : refactoring_code.cmi layer_code.cmi \
+    ../external/jsonwheel/json_out.cmo entity_code.cmi database_code.cmi \
+    ../commons/common.cmi big_grep.cmi test_program_lang.cmi
+test_program_lang.cmx : refactoring_code.cmx layer_code.cmx \
+    ../external/jsonwheel/json_out.cmx entity_code.cmx database_code.cmx \
+    ../commons/common.cmx big_grep.cmx test_program_lang.cmi
+test_program_lang.cmi : ../commons/common.cmi
+unit_program_lang.cmo : ../commons/oUnit.cmi entity_code.cmi \
+    unit_program_lang.cmi
+unit_program_lang.cmx : ../commons/oUnit.cmx entity_code.cmx \
+    unit_program_lang.cmi
+unit_program_lang.cmi : ../commons/oUnit.cmi

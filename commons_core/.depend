@@ -1,0 +1,8 @@
+ANSITerminal.cmo : ANSITerminal.cmi
+ANSITerminal.cmx : ANSITerminal.cmi
+ANSITerminal.cmi :
+console.cmo : ../commons/common2.cmi ../commons/common.cmi ANSITerminal.cmi \
+    console.cmi
+console.cmx : ../commons/common2.cmx ../commons/common.cmx ANSITerminal.cmx \
+    console.cmi
+console.cmi :

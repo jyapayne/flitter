@@ -1,0 +1,26 @@
+common.cmo : common.cmi
+common.cmx : common.cmi
+common.cmi :
+common2.cmo : common.cmi common2.cmi
+common2.cmx : common.cmx common2.cmi
+common2.cmi : common.cmi
+dumper.cmo : dumper.cmi
+dumper.cmx : dumper.cmi
+dumper.cmi :
+features.cmo :
+features.cmx :
+file_type.cmo : common2.cmi common.cmi file_type.cmi
+file_type.cmx : common2.cmx common.cmx file_type.cmi
+file_type.cmi : common.cmi
+map_.cmo : map_.cmi
+map_.cmx : map_.cmi
+map_.cmi :
+oUnit.cmo : dumper.cmi oUnit.cmi
+oUnit.cmx : dumper.cmx oUnit.cmi
+oUnit.cmi :
+ocaml.cmo : common2.cmi common.cmi ocaml.cmi
+ocaml.cmx : common2.cmx common.cmx ocaml.cmi
+ocaml.cmi : common.cmi
+set_.cmo : set_.cmi
+set_.cmx : set_.cmi
+set_.cmi :

@@ -1,0 +1,17 @@
+json_in.cmo : json_type.cmi json_parser.cmi json_lexer.cmo
+json_in.cmx : json_type.cmx json_parser.cmx json_lexer.cmx
+json_io.cmo : json_type.cmi json_parser.cmi json_lexer.cmo json_io.cmi
+json_io.cmx : json_type.cmx json_parser.cmx json_lexer.cmx json_io.cmi
+json_io.cmi : json_type.cmi
+json_lexer.cmo : netconversion2.cmo json_type.cmi json_parser.cmi
+json_lexer.cmx : netconversion2.cmx json_type.cmx json_parser.cmx
+json_out.cmo : json_type.cmi
+json_out.cmx : json_type.cmx
+json_parser.cmo : json_type.cmi json_parser.cmi
+json_parser.cmx : json_type.cmx json_parser.cmi
+json_parser.cmi : json_type.cmi
+json_type.cmo : json_type.cmi
+json_type.cmx : json_type.cmi
+json_type.cmi :
+netconversion2.cmo :
+netconversion2.cmx :

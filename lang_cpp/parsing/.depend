@@ -1,0 +1,202 @@
+ast_cpp.cmo : ../../h_program-lang/scope_code.cmi \
+    ../../h_program-lang/parse_info.cmi ../../commons/common.cmi
+ast_cpp.cmx : ../../h_program-lang/scope_code.cmx \
+    ../../h_program-lang/parse_info.cmx ../../commons/common.cmx
+flag_parsing_cpp.cmo : ../../globals/config_pfff.cmo
+flag_parsing_cpp.cmx : ../../globals/config_pfff.cmx
+lexer_cpp.cmo : parser_cpp.cmi ../../h_program-lang/parse_info.cmi \
+    flag_parsing_cpp.cmo ../../commons/common2.cmi ../../commons/common.cmi \
+    ast_cpp.cmo
+lexer_cpp.cmx : parser_cpp.cmx ../../h_program-lang/parse_info.cmx \
+    flag_parsing_cpp.cmx ../../commons/common2.cmx ../../commons/common.cmx \
+    ast_cpp.cmx
+lib_parsing_cpp.cmo : visitor_cpp.cmi ../../commons/file_type.cmi \
+    ../../commons/common.cmi lib_parsing_cpp.cmi
+lib_parsing_cpp.cmx : visitor_cpp.cmx ../../commons/file_type.cmx \
+    ../../commons/common.cmx lib_parsing_cpp.cmi
+lib_parsing_cpp.cmi : ../../h_program-lang/parse_info.cmi \
+    ../../commons/common.cmi ast_cpp.cmo
+meta_ast_cpp.cmo : ../../h_program-lang/scope_code.cmi \
+    ../../h_program-lang/parse_info.cmi ../../commons/ocaml.cmi \
+    ../../h_program-lang/meta_ast_generic.cmi ../../commons/common.cmi \
+    ast_cpp.cmo meta_ast_cpp.cmi
+meta_ast_cpp.cmx : ../../h_program-lang/scope_code.cmx \
+    ../../h_program-lang/parse_info.cmx ../../commons/ocaml.cmx \
+    ../../h_program-lang/meta_ast_generic.cmx ../../commons/common.cmx \
+    ast_cpp.cmx meta_ast_cpp.cmi
+meta_ast_cpp.cmi : ../../commons/ocaml.cmi \
+    ../../h_program-lang/meta_ast_generic.cmi ast_cpp.cmo
+parse_cpp.cmo : token_views_cpp.cmi token_helpers_cpp.cmi token_cpp.cmi \
+    pp_token.cmi parsing_recovery_cpp.cmi parsing_hacks_lib.cmi \
+    parsing_hacks_define.cmi parsing_hacks_cpp.cmi parsing_hacks.cmi \
+    parser_cpp_mly_helper.cmo parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi lexer_cpp.cmo flag_parsing_cpp.cmo \
+    ../../commons/file_type.cmi ../../commons/common2.cmi \
+    ../../commons/common.cmi ../../h_program-lang/ast_fuzzy.cmi ast_cpp.cmo \
+    parse_cpp.cmi
+parse_cpp.cmx : token_views_cpp.cmx token_helpers_cpp.cmx token_cpp.cmx \
+    pp_token.cmx parsing_recovery_cpp.cmx parsing_hacks_lib.cmx \
+    parsing_hacks_define.cmx parsing_hacks_cpp.cmx parsing_hacks.cmx \
+    parser_cpp_mly_helper.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx lexer_cpp.cmx flag_parsing_cpp.cmx \
+    ../../commons/file_type.cmx ../../commons/common2.cmx \
+    ../../commons/common.cmx ../../h_program-lang/ast_fuzzy.cmx ast_cpp.cmx \
+    parse_cpp.cmi
+parse_cpp.cmi : pp_token.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi flag_parsing_cpp.cmo \
+    ../../commons/common.cmi ../../h_program-lang/ast_fuzzy.cmi ast_cpp.cmo
+parser_cpp.cmo : token_cpp.cmi parser_cpp_mly_helper.cmo \
+    ../../h_program-lang/parse_info.cmi ../../commons/common.cmi ast_cpp.cmo \
+    parser_cpp.cmi
+parser_cpp.cmx : token_cpp.cmx parser_cpp_mly_helper.cmx \
+    ../../h_program-lang/parse_info.cmx ../../commons/common.cmx ast_cpp.cmx \
+    parser_cpp.cmi
+parser_cpp.cmi : token_cpp.cmi ../../h_program-lang/parse_info.cmi \
+    ast_cpp.cmo
+parser_cpp_mly_helper.cmo : lib_parsing_cpp.cmi flag_parsing_cpp.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo
+parser_cpp_mly_helper.cmx : lib_parsing_cpp.cmx flag_parsing_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx
+parsing_hacks.cmo : token_views_cpp.cmi token_views_context.cmi \
+    token_helpers_cpp.cmi pp_token.cmi parsing_hacks_typedef.cmi \
+    parsing_hacks_pp.cmi parsing_hacks_define.cmi parsing_hacks_cpp.cmi \
+    parser_cpp.cmi ../../h_program-lang/parse_info.cmi flag_parsing_cpp.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo \
+    parsing_hacks.cmi
+parsing_hacks.cmx : token_views_cpp.cmx token_views_context.cmx \
+    token_helpers_cpp.cmx pp_token.cmx parsing_hacks_typedef.cmx \
+    parsing_hacks_pp.cmx parsing_hacks_define.cmx parsing_hacks_cpp.cmx \
+    parser_cpp.cmx ../../h_program-lang/parse_info.cmx flag_parsing_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
+    parsing_hacks.cmi
+parsing_hacks.cmi : pp_token.cmi parser_cpp.cmi flag_parsing_cpp.cmo
+parsing_hacks_cpp.cmo : token_views_cpp.cmi token_helpers_cpp.cmi \
+    token_cpp.cmi parsing_hacks_lib.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi flag_parsing_cpp.cmo \
+    ../../commons/common.cmi ast_cpp.cmo parsing_hacks_cpp.cmi
+parsing_hacks_cpp.cmx : token_views_cpp.cmx token_helpers_cpp.cmx \
+    token_cpp.cmx parsing_hacks_lib.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx flag_parsing_cpp.cmx \
+    ../../commons/common.cmx ast_cpp.cmx parsing_hacks_cpp.cmi
+parsing_hacks_cpp.cmi : token_views_cpp.cmi
+parsing_hacks_define.cmo : token_helpers_cpp.cmi parsing_hacks_lib.cmi \
+    parser_cpp.cmi ../../h_program-lang/parse_info.cmi flag_parsing_cpp.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo \
+    parsing_hacks_define.cmi
+parsing_hacks_define.cmx : token_helpers_cpp.cmx parsing_hacks_lib.cmx \
+    parser_cpp.cmx ../../h_program-lang/parse_info.cmx flag_parsing_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
+    parsing_hacks_define.cmi
+parsing_hacks_define.cmi : parser_cpp.cmi
+parsing_hacks_lib.cmo : token_views_cpp.cmi token_helpers_cpp.cmi \
+    token_cpp.cmi parser_cpp.cmi ../../h_program-lang/parse_info.cmi \
+    flag_parsing_cpp.cmo ../../commons/common2.cmi ../../commons/common.cmi \
+    ast_cpp.cmo parsing_hacks_lib.cmi
+parsing_hacks_lib.cmx : token_views_cpp.cmx token_helpers_cpp.cmx \
+    token_cpp.cmx parser_cpp.cmx ../../h_program-lang/parse_info.cmx \
+    flag_parsing_cpp.cmx ../../commons/common2.cmx ../../commons/common.cmx \
+    ast_cpp.cmx parsing_hacks_lib.cmi
+parsing_hacks_lib.cmi : token_views_cpp.cmi token_cpp.cmi parser_cpp.cmi
+parsing_hacks_pp.cmo : token_views_cpp.cmi token_helpers_cpp.cmi \
+    token_cpp.cmi parsing_hacks_lib.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi flag_parsing_cpp.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo \
+    parsing_hacks_pp.cmi
+parsing_hacks_pp.cmx : token_views_cpp.cmx token_helpers_cpp.cmx \
+    token_cpp.cmx parsing_hacks_lib.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx flag_parsing_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
+    parsing_hacks_pp.cmi
+parsing_hacks_pp.cmi : token_views_cpp.cmi
+parsing_hacks_typedef.cmo : token_views_cpp.cmi token_views_context.cmi \
+    token_helpers_cpp.cmi parsing_hacks_lib.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi ../../commons/common.cmi ast_cpp.cmo \
+    parsing_hacks_typedef.cmi
+parsing_hacks_typedef.cmx : token_views_cpp.cmx token_views_context.cmx \
+    token_helpers_cpp.cmx parsing_hacks_lib.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx ../../commons/common.cmx ast_cpp.cmx \
+    parsing_hacks_typedef.cmi
+parsing_hacks_typedef.cmi : token_views_cpp.cmi
+parsing_recovery_cpp.cmo : token_helpers_cpp.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi flag_parsing_cpp.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi \
+    parsing_recovery_cpp.cmi
+parsing_recovery_cpp.cmx : token_helpers_cpp.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx flag_parsing_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx \
+    parsing_recovery_cpp.cmi
+parsing_recovery_cpp.cmi : parser_cpp.cmi
+pp_token.cmo : token_views_cpp.cmi token_helpers_cpp.cmi token_cpp.cmi \
+    parsing_hacks_lib.cmi parser_cpp.cmi flag_parsing_cpp.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo \
+    pp_token.cmi
+pp_token.cmx : token_views_cpp.cmx token_helpers_cpp.cmx token_cpp.cmx \
+    parsing_hacks_lib.cmx parser_cpp.cmx flag_parsing_cpp.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
+    pp_token.cmi
+pp_token.cmi : token_views_cpp.cmi parser_cpp.cmi ../../commons/common.cmi
+test_dump_nim.cmo : ../../h_program-lang/parse_info.cmi parse_cpp.cmi \
+    flag_parsing_cpp.cmo ../../commons/common.cmi ast_cpp.cmo \
+    test_dump_nim.cmi
+test_dump_nim.cmx : ../../h_program-lang/parse_info.cmx parse_cpp.cmx \
+    flag_parsing_cpp.cmx ../../commons/common.cmx ast_cpp.cmx \
+    test_dump_nim.cmi
+test_dump_nim.cmi : ../../commons/common.cmi
+test_parsing_cpp.cmo : token_views_cpp.cmi token_views_context.cmi \
+    token_helpers_cpp.cmi test_dump_nim.cmi \
+    ../../h_program-lang/skip_code.cmi parsing_hacks_cpp.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi parse_cpp.cmi ../../commons/ocaml.cmi \
+    ../../h_program-lang/meta_ast_generic.cmi meta_ast_cpp.cmi \
+    lib_parsing_cpp.cmi flag_parsing_cpp.cmo ../../commons_core/console.cmi \
+    ../../commons/common.cmi ../../h_program-lang/ast_fuzzy.cmi ast_cpp.cmo \
+    test_parsing_cpp.cmi
+test_parsing_cpp.cmx : token_views_cpp.cmx token_views_context.cmx \
+    token_helpers_cpp.cmx test_dump_nim.cmx \
+    ../../h_program-lang/skip_code.cmx parsing_hacks_cpp.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx parse_cpp.cmx ../../commons/ocaml.cmx \
+    ../../h_program-lang/meta_ast_generic.cmx meta_ast_cpp.cmx \
+    lib_parsing_cpp.cmx flag_parsing_cpp.cmx ../../commons_core/console.cmx \
+    ../../commons/common.cmx ../../h_program-lang/ast_fuzzy.cmx ast_cpp.cmx \
+    test_parsing_cpp.cmi
+test_parsing_cpp.cmi : ../../commons/common.cmi
+token_cpp.cmo : token_cpp.cmi
+token_cpp.cmx : token_cpp.cmi
+token_cpp.cmi :
+token_helpers_cpp.cmo : parser_cpp.cmi ../../h_program-lang/parse_info.cmi \
+    token_helpers_cpp.cmi
+token_helpers_cpp.cmx : parser_cpp.cmx ../../h_program-lang/parse_info.cmx \
+    token_helpers_cpp.cmi
+token_helpers_cpp.cmi : parser_cpp.cmi ../../h_program-lang/parse_info.cmi
+token_views_context.cmo : token_views_cpp.cmi token_helpers_cpp.cmi \
+    parser_cpp.cmi ../../h_program-lang/parse_info.cmi \
+    ../../commons/common2.cmi ../../commons/common.cmi \
+    token_views_context.cmi
+token_views_context.cmx : token_views_cpp.cmx token_helpers_cpp.cmx \
+    parser_cpp.cmx ../../h_program-lang/parse_info.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx \
+    token_views_context.cmi
+token_views_context.cmi : token_views_cpp.cmi
+token_views_cpp.cmo : token_helpers_cpp.cmi parser_cpp.cmi \
+    ../../h_program-lang/parse_info.cmi ../../commons/ocaml.cmi \
+    flag_parsing_cpp.cmo ../../commons/common2.cmi ../../commons/common.cmi \
+    token_views_cpp.cmi
+token_views_cpp.cmx : token_helpers_cpp.cmx parser_cpp.cmx \
+    ../../h_program-lang/parse_info.cmx ../../commons/ocaml.cmx \
+    flag_parsing_cpp.cmx ../../commons/common2.cmx ../../commons/common.cmx \
+    token_views_cpp.cmi
+token_views_cpp.cmi : parser_cpp.cmi ../../commons/ocaml.cmi
+type_cpp.cmo : ast_cpp.cmo type_cpp.cmi
+type_cpp.cmx : ast_cpp.cmx type_cpp.cmi
+type_cpp.cmi : ast_cpp.cmo
+unit_parsing_cpp.cmo : parse_cpp.cmi ../../commons/oUnit.cmi \
+    flag_parsing_cpp.cmo ../../globals/config_pfff.cmo \
+    ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo \
+    unit_parsing_cpp.cmi
+unit_parsing_cpp.cmx : parse_cpp.cmx ../../commons/oUnit.cmx \
+    flag_parsing_cpp.cmx ../../globals/config_pfff.cmx \
+    ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
+    unit_parsing_cpp.cmi
+unit_parsing_cpp.cmi : ../../commons/oUnit.cmi
+visitor_cpp.cmo : ../../commons/ocaml.cmi ast_cpp.cmo visitor_cpp.cmi
+visitor_cpp.cmx : ../../commons/ocaml.cmx ast_cpp.cmx visitor_cpp.cmi
+visitor_cpp.cmi : ast_cpp.cmo

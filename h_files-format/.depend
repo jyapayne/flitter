@@ -1,0 +1,13 @@
+outline.cmo : ../commons/common2.cmi ../commons/common.cmi outline.cmi
+outline.cmx : ../commons/common2.cmx ../commons/common.cmx outline.cmi
+outline.cmi : ../commons/common2.cmi ../commons/common.cmi
+simple_format.cmo : ../commons/common2.cmi ../commons/common.cmi \
+    simple_format.cmi
+simple_format.cmx : ../commons/common2.cmx ../commons/common.cmx \
+    simple_format.cmi
+simple_format.cmi : ../commons/common2.cmi
+source_tree.cmo : simple_format.cmi ../commons/common2.cmi \
+    ../commons/common.cmi source_tree.cmi
+source_tree.cmx : simple_format.cmx ../commons/common2.cmx \
+    ../commons/common.cmx source_tree.cmi
+source_tree.cmi : ../commons/common.cmi
