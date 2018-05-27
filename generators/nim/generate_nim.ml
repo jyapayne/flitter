@@ -70,7 +70,8 @@ let rec process_token tok =
   | OriginTok loc -> loc.str
   | FakeTokStr (v1, opt) -> ""
   | Ab -> ""
-  | ExpandedTok (tok1, tok2, integer) -> tok1.str
+  | ExpandedTok (tok1, tok2, integer) ->
+    tok1.str
 
 and process_include_kind = function
   | Local -> ""

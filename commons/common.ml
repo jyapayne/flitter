@@ -697,14 +697,14 @@ let rec find_some_opt p = function
       |	Some v -> Some v
       |	None -> find_some_opt p l
 
-let find_some p xs = 
+let find_some p xs =
   match find_some_opt p xs with
   | None -> raise Not_found
   | Some x -> x
 
-let rec find_opt f xs = 
+let rec find_opt f xs =
   find_some_opt (fun x -> if f x then Some x else None) xs
-  
+
 
 (*****************************************************************************)
 (* Regexp, can also use PCRE *)
@@ -866,7 +866,7 @@ let realpath2 path =
 
 let realpath2 path =
   let stat = Unix.stat path in
-  let dir, suffix = 
+  let dir, suffix =
     match stat.Unix.st_kind with
     | Unix.S_DIR -> path, ""
     | _ -> Filename.dirname path, Filename.basename path
@@ -1058,7 +1058,7 @@ let group_by f xs =
 
   (* could use Set *)
   let hkeys = Hashtbl.create 101 in
-  
+
   xs |> List.iter (fun x ->
     let k = f x in
     Hashtbl.replace hkeys k true;
@@ -1072,7 +1072,7 @@ let group_by_multi fkeys xs =
 
   (* could use Set *)
   let hkeys = Hashtbl.create 101 in
-  
+
   xs |> List.iter (fun x ->
     let ks = fkeys x in
     ks |> List.iter (fun k ->
@@ -1277,7 +1277,7 @@ let main_boilerplate f =
         ))
        (fun()->
          if !profile <> ProfNone
-         then begin 
+         then begin
            pr2 (profile_diagnostic ());
            Gc.print_stat stderr;
          end;
