@@ -273,18 +273,22 @@ and process_info token =
   process_token token
 
 and process_expression (expr, toks) =
-  process_exprbis expr
+  process_exprbis toks expr
 
-and process_exprbis =
+and process_exprbis toks =
   function
   | Id ((name, info)) ->
     let (_, _, ident) = name in
     process_ident ident
-  | C const -> process_constant const
+  | C const ->
+    let res = match toks with
+      | [] -> ""
+      | main_tok :: _ -> process_token main_tok in
+    res
   | Call ((expr, args)) ->
       let name = process_expression expr
-      and args = process_paren (process_comma_list process_argument) args
-      in name ^ args
+      and args = process_paren (process_comma_list process_argument) args in
+      name ^ args
   | CondExpr ((v1, v2, v3)) ->
       (*let v1 = vof_expression v1
       and v2 = Ocaml.vof_option vof_expression v2
@@ -573,8 +577,7 @@ and process_init =
 and process_block_declaration =
   function
   | DeclList ((decl, semi_col)) ->
-      let v1 = process_comma_list process_onedecl decl
-      in "DECLLIST " ^ v1
+      process_comma_list process_onedecl decl
   | MacroDecl ((v1, v2, v3, v4)) ->
       let v1 = process_list process_token v1
       and v2 = process_simple_ident v2
@@ -756,7 +759,7 @@ and process_define _tok ident kind value =
   match kind with
   | DefineVar ->
     let (idname, _ ) = ident in
-    "const " ^ idname ^ " = " ^ process_define_val value ^ "\n"
+    "const " ^ idname ^ " = " ^ process_define_val value
   | DefineFunc func ->
     ""
   (*let (idname, _) = ident
@@ -864,7 +867,7 @@ and process_toplevel = function
 let iter_ast ast =
   List.map process_toplevel ast
 
-let generate_nim cfile macro_files =
+let generate_nim cfile ?(macro_files = []) =
   Parse_cpp.init_defs cfile;
   List.iter Parse_cpp.add_defs macro_files;
   let ast = Parse_cpp.parse_program cfile in
@@ -873,7 +876,7 @@ let generate_nim cfile macro_files =
 
 let test_gen_nim file =
   let macro_list = [!Flag.macros_h] in
-  let nim_str = generate_nim file macro_list in
+  let nim_str = generate_nim file ~macro_files:macro_list in
   pr nim_str
 
 let actions () = [
