@@ -10,6 +10,15 @@
 *.cmxs
 *.cmxa
 
+lang_cpp/parsing/lexer_cpp.ml
+lang_cpp/parsing/parser_cpp.ml
+lang_cpp/parsing/parser_cpp.mli
+lang_cpp/parsing/parser_cpp.output
+h_program-lang/archi_code_lexer.ml
+
+pfff
+pfff_test
+
 # ocamlbuild working directory
 _build/
 
