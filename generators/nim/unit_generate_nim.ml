@@ -55,4 +55,5 @@ let unittest =
     tests "function declarations" "test_func" @
     tests "enums" "test_enum" @
     tests "macros" "test_macro" @
+    tests "operators" "test_operator" @
     []
