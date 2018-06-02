@@ -10,15 +10,37 @@ let process_either _of_a _of_b =
   | Left left -> "" ^ _of_a left
   | Right right -> "" ^ _of_b right
 
+let is_empty s =
+  (s = "")
+
+let gen_indent num_spaces =
+  let rec aux acc num_spaces =
+    match num_spaces with
+    | 0 -> acc
+    | rest -> aux (acc^" ") (num_spaces-1)
+  in
+  aux "" num_spaces
+
+
+let indent ?(level=2) str =
+  let indent_str = gen_indent level
+  and search = Str.regexp "\n" in
+  indent_str ^ String.trim (Str.global_replace search ("\n"^indent_str) str)
+
 
 let process_option ofa x =
   match x with
   | None -> ""
   | Some stuff -> "" ^ ofa stuff
 
-let process_list _of_a node =
+let process_tuple_option ofa x =
+  match x with
+  | None -> ("", "")
+  | Some stuff -> ofa stuff
+
+let process_list ?(delimiter=", ") _of_a node =
   let map = List.map _of_a node
-  in String.concat ", " map
+  in String.concat delimiter map
 
 
 let rec process_info token =
@@ -80,6 +102,7 @@ and process_include_kind = function
 
 and process_define_expr expr =
   ""
+
 and process_constant =
   function
   | String (str, is_wchar) -> str
@@ -183,7 +206,7 @@ and process_functionType {
   paren_str ^ ": " ^ ret_type
 
 and process_simple_ident (name, tok) =
-  process_token tok
+  name
 
 and process_e_val (tok, cexpr) =
   let equals = process_token tok (* equals sign *)
@@ -276,6 +299,53 @@ and process_info token =
 and process_expression (expr, toks) =
   process_exprbis toks expr
 
+and process_fixOp expr =
+  function
+  | Dec -> "- 1"
+  | Inc -> "+ 1"
+
+and process_binaryOp =
+  function
+  | Arith arith ->
+    process_arithOp arith
+  | Logical log ->
+      process_logicalOp log
+
+and process_arithOp =
+  function
+  | Plus -> "+"
+  | Minus -> "-"
+  | Mul -> "*"
+  | Div -> "/"
+  | Mod -> "mod"
+  | DecLeft -> "shl"
+  | DecRight -> "shr"
+  | And -> "and"
+  | Or -> "or"
+  | Xor -> "xor"
+
+and process_logicalOp =
+  function
+  | Inf -> "<"
+  | Sup -> ">"
+  | InfEq -> "<="
+  | SupEq -> ">="
+  | Eq -> "=="
+  | NotEq -> "!="
+  | AndLog -> "and"
+  | OrLog -> "or"
+
+and process_unaryOp expr =
+  let expr = process_expression expr in
+  function
+  | GetRef -> "addr " ^ expr
+  | DeRef -> expr ^ "[]"
+  | UnPlus -> "+" ^ expr
+  | UnMinus -> "-"  ^ expr
+  | Tilde -> "not " ^ expr
+  | Not -> "not " ^ expr
+  | GetRefLabel -> failwith "Ref labels are not supported in flitter!"
+
 and process_exprbis toks =
   function
   | Id ((name, info)) ->
@@ -306,27 +376,27 @@ and process_exprbis toks =
       and v3 = vof_expression v3
       in Ocaml.VSum (("Assignment", [ v1; v2; v3 ]))*)
     ""
-  | Postfix ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_fixOp v2
-      in Ocaml.VSum (("Postfix", [ v1; v2 ]))*)
-    ""
-  | Infix ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_fixOp v2
-      in Ocaml.VSum (("Infix", [ v1; v2 ]))*)
-    ""
-  | Unary ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_unaryOp v2
-      in Ocaml.VSum (("Unary", [ v1; v2 ]))*)
-    ""
-  | Binary ((v1, v2, v3)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_binaryOp v2
-      and v3 = vof_expression v3
-      in Ocaml.VSum (("Binary", [ v1; v2; v3 ]))*)
-    ""
+  | Postfix ((expr, op)) ->
+      let expr = process_expression expr in
+      let op_expr =
+        match op with
+        | Dec -> "postDec(" ^ expr ^ ")"
+        | Inc -> "postInc(" ^ expr ^ ")" in
+      op_expr
+  | Infix ((expr, op)) ->
+      let expr = process_expression expr in
+      let op_expr =
+        match op with
+        | Dec -> "preDec(" ^ expr ^ ")"
+        | Inc -> "preInc(" ^ expr ^ ")" in
+      op_expr
+  | Unary ((expr, op)) ->
+      process_unaryOp expr op
+  | Binary ((left, op, right)) ->
+    let left = process_expression left
+    and op = process_binaryOp op
+    and right = process_expression right
+    in left ^ " " ^ op ^ " " ^ right
   | ArrayAccess ((v1, v2)) ->
       (*let v1 = vof_expression v1
       and v2 = vof_bracket vof_expression v2
@@ -368,9 +438,7 @@ and process_exprbis toks =
       in Ocaml.VSum (("Cast", [ v1; v2 ]))*)
     ""
   | StatementExpr v1 ->
-      (*let v1 = vof_paren vof_compound v1
-      in Ocaml.VSum (("StatementExpr", [ v1 ]))*)
-    ""
+      process_paren process_compound v1
   | GccConstructor ((v1, v2)) ->
       (*let v1 = vof_paren vof_fullType v1
       and v2 = vof_brace (vof_comma_list vof_initialiser) v2
@@ -463,6 +531,7 @@ and process_iteration =
       and v2 = process_paren (process_comma_list process_argument) v2
       and v3 = process_statement v3
       in v1 ^ v2 ^ v3
+
 and process_jump =
   function
   | Goto goto -> "# XXX goto not supported: " ^ goto
@@ -470,7 +539,7 @@ and process_jump =
   | Break -> "break"
   | Return -> "return"
   | ReturnExpr ret_expr ->
-      process_expression ret_expr
+      "return " ^ process_expression ret_expr
   | GotoComputed goto_comp ->
     "#[ XXX goto not supported: " ^ process_expression goto_comp ^ "]#"
 
@@ -500,39 +569,42 @@ and process_onedecl {
     v_storage = v_storage
   } =
   let name =
-    process_option
+    process_tuple_option
       (fun (name, init) ->
          let name = process_name name
          and init = process_option process_init init
-         in name ^ init)
+         in (name, init))
       v_namei in
   let res = process_onedeclFullType "" name v_storage v_type in
   res
 
-and process_onedeclFullType prefix name storage (qualifier, (typeCbis, tok_list)) =
+and process_onedeclFullType prefix (name, init) storage (qualifier, (typeCbis, tok_list)) =
   match typeCbis with
   | BaseType btype ->
       process_baseType btype
   | Pointer point ->
-      process_onedeclFullType "ptr " name storage point
+      process_onedeclFullType "ptr " (name, init) storage point
   | Reference ref ->
-      process_onedeclFullType "ref " name storage ref
+      process_onedeclFullType "ref " (name, init) storage ref
   | Array ((arr, typ)) ->
       let arr = process_bracket (process_option process_constExpression) arr
       and typ = process_fullType typ
       in arr ^ typ
   | FunctionType ftype ->
     let ret = match storage with
-    | NoSto -> "proc " ^ name ^ process_functionType ftype
+    | NoSto -> "proc " ^ name^init ^ process_functionType ftype
     | StoTypedef st_tdef ->
-      "type " ^ name ^ " = " ^ "proc " ^ process_functionType ftype
-    | Sto sto -> "proc " ^ name ^ process_functionType ftype in
+      "type " ^ name^init ^ " = " ^ "proc " ^ process_functionType ftype
+    | Sto sto -> "proc " ^ name^init ^ process_functionType ftype in
     ret
-  | EnumDef ((name, ident, elements)) ->
+  | EnumDef ((_, ident, elements)) ->
       let ident = process_option process_simple_ident ident
       and elements =
         process_brace (process_comma_list process_enum_elem) elements
-      in "type " ^ ident ^ " = enum " ^ elements
+      in
+      let ty_str = "type " ^ ident ^ " = enum " ^ elements
+      and let_stmt = "\nvar " ^ name ^ ": " ^ ident ^ " " ^ init in
+      if is_empty(name) then ty_str else ty_str ^ let_stmt
   | StructDef sdef ->
       "" (*process_class_definition sdef*)
   | EnumName ((enum, name)) ->
@@ -549,7 +621,7 @@ and process_onedeclFullType prefix name storage (qualifier, (typeCbis, tok_list)
   | TypeOf ((typeof, tdef)) ->
       process_paren process_either_ft_or_expr tdef
   | ParenType (left, type_inf, right) ->
-      process_onedeclFullType "" name storage type_inf
+      process_onedeclFullType "" (name, init) storage type_inf
 
 and process_storage st = process_storagebis st
 and process_storagebis =
@@ -568,10 +640,10 @@ and process_storageClass =
 
 and process_init =
   function
-  | EqInit ((v1, v2)) ->
-      let v1 = process_token v1
-      and v2 = process_initialiser v2
-      in v1 ^ v2
+  | EqInit ((equals, init)) ->
+      let equals = process_token equals
+      and init = process_initialiser init
+      in equals ^ " " ^ init
   | ObjInit v1 ->
       process_paren (process_comma_list process_argument) v1
 
@@ -657,7 +729,8 @@ and process_statementbis =
   | MacroStmt -> ""
   | StmtTodo -> "# TODO"
 
-and process_compound comp = process_brace (process_list process_statement_sequencable) comp
+and process_compound comp =
+  process_brace (process_list ~delimiter:"\n" process_statement_sequencable) comp
 
 and process_statement_sequencable =
   function
@@ -793,7 +866,11 @@ and process_func_definition {
     f_storage = f_storage;
     f_body = f_body
   } =
-  ""
+  let name = process_name f_name
+  and def_str = process_functionType f_type
+  and body = process_compound f_body in
+
+  "proc " ^ name ^ def_str ^ " =\n" ^ (indent body)
 
 and process_func_or_else =
   function
@@ -809,7 +886,6 @@ and process_declaration =
   | BlockDecl block ->
     process_block_declaration block
   | Func func ->
-    (*let v1 = vof_func_or_else v1 in Ocaml.VSum (("Func", [ v1 ]))*)
     process_func_or_else func
   | TemplateDecl (v1, v2, v3) ->
     (*let v1 = vof_tok v1
@@ -851,7 +927,7 @@ and process_declaration =
       and v2 = vof_brace (Ocaml.vof_list vof_declaration_sequencable) v2
       in Ocaml.VSu:m (("NameSpaceAnon", [ v1; v2 ]))*)
     ""
-  | EmptyDef def -> process_token def
+  | EmptyDef def -> ""
   | DeclTodo -> "# TODO"
 
 and process_fullType ((qualifier, typeC)) =
