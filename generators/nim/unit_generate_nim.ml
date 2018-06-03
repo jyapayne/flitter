@@ -20,8 +20,11 @@ let strip_string s =
   Str.global_replace (Str.regexp "^[\r\n\t ]") "" rep
 
 let get_files glob =
-  let path = Filename.concat Config_pfff.path "/tests/generators/nim/" in
-  sort (Common2.glob (spf "%s/%s" path glob))
+  try
+    let path = Filename.concat Config_pfff.path "/tests/generators/nim/" in
+    sort (Common2.glob (spf "%s/%s" path glob))
+  with
+    Common2.CmdError (a, b) -> []
 
 let basename fpath =
   let fullpath = Filename.concat Config_pfff.path "/tests/generators/nim//" in
@@ -29,8 +32,9 @@ let basename fpath =
 
 let get_code_pairs name =
   let cglob = name ^ "*.c" in
+  let cppglob = name ^ "*.cpp" in
   let nimglob = name ^ "*.nim" in
-  let cfiles = get_files cglob
+  let cfiles = get_files cglob @ get_files cppglob
   and nimfiles = get_files nimglob in
   List.map2 (fun cfile nimfile ->
       let test_code = _gen_nim cfile in
@@ -56,4 +60,9 @@ let unittest =
     tests "enums" "test_enum" @
     tests "macros" "test_macro" @
     tests "operators" "test_operator" @
+    tests "expressions" "test_expression" @
+    tests "arrays" "test_array" @
+    tests "structs" "test_struct" @
+    tests "casting" "test_cast" @
+    tests "conditionals" "test_conditional" @
     []
