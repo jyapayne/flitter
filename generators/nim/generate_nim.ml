@@ -21,11 +21,13 @@ let gen_indent num_spaces =
   in
   aux "" num_spaces
 
+let replace search sub str =
+  Str.global_replace (Str.regexp search) sub str
 
 let indent ?(level=2) str =
   let indent_str = gen_indent level
   and search = Str.regexp "\n" in
-  indent_str ^ String.trim (Str.global_replace search ("\n"^indent_str) str)
+  indent_str ^ String.trim (Str.global_replace search ("\n" ^ indent_str) str)
 
 
 let process_option ofa x =
@@ -346,6 +348,12 @@ and process_unaryOp expr =
   | Not -> "not " ^ expr
   | GetRefLabel -> failwith "Ref labels are not supported in flitter!"
 
+and process_assignOp =
+  function
+  | SimpleAssign -> "="
+  | OpAssign arith ->
+      process_arithOp arith
+
 and process_exprbis toks =
   function
   | Id ((name, info)) ->
@@ -360,22 +368,21 @@ and process_exprbis toks =
       let name = process_expression expr
       and args = process_paren (process_comma_list process_argument) args in
       name ^ args
-  | CondExpr ((v1, v2, v3)) ->
-      (*let v1 = vof_expression v1
-      and v2 = Ocaml.vof_option vof_expression v2
-      and v3 = vof_expression v3*)
-    ""
+  | CondExpr ((binary, first_option, second_option)) ->
+    let bin = process_expression binary
+      and first_op = process_option process_expression first_option
+      and second_op = process_expression second_option in
+    "if " ^ bin ^ ": " ^ first_op ^ " else: " ^ second_op
   | Sequence ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_expression v2
+      (*let v1 = process_expression v1
+      and v2 = process_expression v2
       in Ocaml.VSum (("Sequence", [ v1; v2 ]))*)
     ""
-  | Assignment ((v1, v2, v3)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_assignOp v2
-      and v3 = vof_expression v3
-      in Ocaml.VSum (("Assignment", [ v1; v2; v3 ]))*)
-    ""
+  | Assignment ((left, op, right)) ->
+    let left = process_expression left
+      and op = process_assignOp op
+      and right = process_expression right in
+    left ^ " " ^ op ^ " " ^ right
   | Postfix ((expr, op)) ->
       let expr = process_expression expr in
       let op_expr =
@@ -397,83 +404,83 @@ and process_exprbis toks =
     and op = process_binaryOp op
     and right = process_expression right
     in left ^ " " ^ op ^ " " ^ right
-  | ArrayAccess ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_bracket vof_expression v2
-      in Ocaml.VSum (("ArrayAccess", [ v1; v2 ]))*)
-    ""
-  | RecordAccess ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_name v2
-      in Ocaml.VSum (("RecordAccess", [ v1; v2 ]))*)
-    ""
-  | RecordPtAccess ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_name v2
-      in Ocaml.VSum (("RecordPtAccess", [ v1; v2 ]))*)
-    ""
-  | RecordStarAccess ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_expression v2
-      in Ocaml.VSum (("RecordStarAccess", [ v1; v2 ]))*)
-    ""
-  | RecordPtStarAccess ((v1, v2)) ->
-      (*let v1 = vof_expression v1
-      and v2 = vof_expression v2
-      in Ocaml.VSum (("RecordPtStarAccess", [ v1; v2 ]))*)
-    ""
-  | SizeOfExpr ((v1, v2)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_expression v2
-      in Ocaml.VSum (("SizeOfExpr", [ v1; v2 ]))*)
-    ""
-  | SizeOfType ((v1, v2)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_paren vof_fullType v2
-      in Ocaml.VSum (("SizeOfType", [ v1; v2 ]))*)
-    ""
-  | Cast ((v1, v2)) ->
-      (*let v1 = vof_paren vof_fullType v1
-      and v2 = vof_expression v2
-      in Ocaml.VSum (("Cast", [ v1; v2 ]))*)
-    ""
+  | ArrayAccess ((expr, bracket_expr)) ->
+    let expr = process_expression expr
+      and bracket_expr = process_bracket process_expression bracket_expr in
+    expr ^ bracket_expr
+  | RecordAccess ((expr, field)) ->
+    let expr = process_expression expr
+      and field = process_name field in
+    expr ^ "." ^ field
+  | RecordPtAccess ((expr, field)) ->
+    let expr = process_expression expr
+      and field = process_name field in
+    expr ^ "." ^ field
+  | RecordStarAccess ((left, right)) ->
+    (*
+     * Not sure what this is, exactly. The nim code
+     * will have it commented out for now.
+     *)
+    let left = process_expression left
+      and right = process_expression right in
+    "# " ^ left ^ process_list process_token toks ^ right
+  | RecordPtStarAccess ((left, right)) ->
+    (*
+     * Not sure what this is, exactly. The nim code
+     * will have it commented out for now.
+     *)
+    let left = process_expression left
+      and right = process_expression right in
+    "# " ^ left ^ process_list process_token toks ^ right
+  | SizeOfExpr ((sizeof, expr)) ->
+    let expr = process_expression expr in
+    "sizeof(" ^ expr ^ ")"
+  | SizeOfType ((sizeof, fullType)) ->
+    let ty = process_paren process_fullType fullType in
+    "sizeof" ^ ty
+  | Cast (((left, fullType, right), expr)) ->
+    let fullType = process_fullType fullType
+      and expr = process_expression expr in
+      "cast[" ^ fullType ^ "](" ^ expr ^ ")"
   | StatementExpr v1 ->
       process_paren process_compound v1
   | GccConstructor ((v1, v2)) ->
-      (*let v1 = vof_paren vof_fullType v1
-      and v2 = vof_brace (vof_comma_list vof_initialiser) v2
-      in Ocaml.VSum (("GccConstructor", [ v1; v2 ]))*)
-    ""
+    (*
+     * Not sure what this is, exactly. The nim code
+     * will have it commented out for now.
+     *)
+    let v1 = process_paren process_fullType v1
+      and v2 = process_brace (process_comma_list process_initialiser) v2 in
+    "# " ^ v1 ^ process_list process_token toks ^ v2
   | This v1 ->
-    (*let v1 = vof_tok v1 in Ocaml.VSum (("This", [ v1 ]))*)
+    (*let v1 = process_tok v1 in Ocaml.VSum (("This", [ v1 ]))*)
     ""
-  | ConstructedObject ((v1, v2)) ->
-      (*let v1 = vof_fullType v1
-      and v2 = vof_paren (vof_comma_list vof_argument) v2
-      in Ocaml.VSum (("ConstructedObject", [ v1; v2 ]))*)
-    ""
+  | ConstructedObject ((fullType, params)) ->
+    let fullType = process_fullType fullType
+      and params = process_paren (process_comma_list process_argument) params in
+    fullType ^ params
   | TypeId ((v1, v2)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_paren vof_either_ft_or_expr v2
+      (*let v1 = process_tok v1
+      and v2 = process_paren process_either_ft_or_expr v2
       in Ocaml.VSum (("TypeId", [ v1; v2 ]))*)
     ""
-  | CplusplusCast ((v1, v2, v3)) ->
-      (*let v1 = vof_wrap2 vof_cast_operator v1
-      and v2 = vof_angle vof_fullType v2
-      and v3 = vof_paren vof_expression v3
+  | CplusplusCast ((cast_op, fullType, expr)) ->
+      (*let v1 = process_wrap2 process_cast_operator v1
+      and v2 = process_angle process_fullType v2
+      and v3 = process_paren process_expression v3
       in Ocaml.VSum (("CplusplusCast", [ v1; v2; v3 ]))*)
     ""
   | New ((v1, v2, v3, v4, v5)) ->
-      (*let v1 = Ocaml.vof_option vof_tok v1
-      and v2 = vof_tok v2
-      and v3 = Ocaml.vof_option (vof_paren (vof_comma_list vof_argument)) v3
-      and v4 = vof_fullType v4
-      and v5 = Ocaml.vof_option (vof_paren (vof_comma_list vof_argument)) v5
+      (*let v1 = Ocaml.process_option process_tok v1
+      and v2 = process_tok v2
+      and v3 = Ocaml.process_option (process_paren (process_comma_list process_argument)) v3
+      and v4 = process_fullType v4
+      and v5 = Ocaml.process_option (process_paren (process_comma_list process_argument)) v5
       in Ocaml.VSum (("New", [ v1; v2; v3; v4; v5 ]))*)
     ""
   | Delete ((v1, v2)) ->
-      (*let v1 = Ocaml.vof_option vof_tok v1
-      and v2 = vof_expression v2
+      (*let v1 = Ocaml.process_option process_tok v1
+      and v2 = process_expression v2
       in Ocaml.VSum (("Delete", [ v1; v2 ]))*)
     ""
   | DeleteArray ((tok, expr)) ->
@@ -488,13 +495,14 @@ and process_exprbis toks =
 
 and process_selection =
   function
-  | If ((v1, v2, v3, v4, v5)) ->
-      let v1 = process_token v1
-      and v2 = process_paren process_expression v2
-      and v3 = process_statement v3
-      and v4 = process_option process_token v4
-      and v5 = process_statement v5
-      in v1 ^ v2 ^ v3 ^ v4 ^v5
+  | If ((if_tok, paren_expr, stmt1, else_tok, stmt2)) ->
+    let paren_expr = process_paren process_expression paren_expr
+      and stmt1 = process_statement stmt1
+      and else_tok = process_option process_token else_tok
+      and stmt2 = process_statement stmt2 in
+    "if" ^ paren_expr ^
+      stmt1 ^ "\n" ^
+    replace "elseif" "elif" (else_tok ^ stmt2)
   | Switch ((v1, v2, v3)) ->
       let v1 = process_token v1
       and v2 = process_paren process_expression v2
@@ -534,14 +542,14 @@ and process_iteration =
 
 and process_jump =
   function
-  | Goto goto -> "# XXX goto not supported: " ^ goto
+  | Goto goto -> failwith "# XXX goto not supported: " ^ goto
   | Continue -> "continue"
   | Break -> "break"
   | Return -> "return"
   | ReturnExpr ret_expr ->
       "return " ^ process_expression ret_expr
   | GotoComputed goto_comp ->
-    "#[ XXX goto not supported: " ^ process_expression goto_comp ^ "]#"
+    failwith "#[ XXX goto not supported: " ^ process_expression goto_comp ^ "]#"
 
 and process_handler (v1, v2, v3) =
   let v1 = process_token v1
@@ -707,7 +715,7 @@ and process_statement stmt = wrap process_statementbis stmt
 and process_statementbis =
   function
   | Compound comp ->
-    process_compound comp
+    ":\n" ^ indent (process_compound comp)
   | ExprStatement expr ->
     process_exprStatement expr
   | Labeled labeled ->
@@ -888,43 +896,43 @@ and process_declaration =
   | Func func ->
     process_func_or_else func
   | TemplateDecl (v1, v2, v3) ->
-    (*let v1 = vof_tok v1
-    and v2 = vof_template_parameters v2
-    and v3 = vof_declaration v3
+    (*let v1 = process_tok v1
+    and v2 = process_template_parameters v2
+    and v3 = process_declaration v3
     in Ocaml.VSum (("TemplateDecl", [ v1; v2; v3 ]))*)
     ""
   | TemplateSpecialization ((v1, v2, v3)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_angle Ocaml.vof_unit v2
-      and v3 = vof_declaration v3
+      (*let v1 = process_tok v1
+      and v2 = process_angle Ocaml.process_unit v2
+      and v3 = process_declaration v3
       in Ocaml.VSum (("TemplateSpecialization", [ v1; v2; v3 ]))*)
     ""
   | ExternC ((v1, v2, v3)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_tok v2
-      and v3 = vof_declaration v3
+      (*let v1 = process_tok v1
+      and v2 = process_tok v2
+      and v3 = process_declaration v3
       in Ocaml.VSum (("ExternC", [ v1; v2; v3 ]))*)
     ""
   | ExternCList ((v1, v2, v3)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_tok v2
-      and v3 = vof_brace (Ocaml.vof_list vof_declaration_sequencable) v3
+      (*let v1 = process_tok v1
+      and v2 = process_tok v2
+      and v3 = process_brace (Ocaml.process_list process_declaration_sequencable) v3
       in Ocaml.VSum (("ExternCList", [ v1; v2; v3 ]))*)
     ""
   | NameSpace ((v1, v2, v3)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_wrap2 Ocaml.vof_string v2
-      and v3 = vof_brace (Ocaml.vof_list vof_declaration_sequencable) v3
+      (*let v1 = process_tok v1
+      and v2 = process_wrap2 Ocaml.process_string v2
+      and v3 = process_brace (Ocaml.process_list process_declaration_sequencable) v3
       in Ocaml.VSum (("NameSpace", [ v1; v2; v3 ]))*)
     ""
   | NameSpaceExtend ((v1, v2)) ->
-      (*let v1 = Ocaml.vof_string v1
-      and v2 = Ocaml.vof_list vof_declaration_sequencable v2
+      (*let v1 = Ocaml.process_string v1
+      and v2 = Ocaml.process_list process_declaration_sequencable v2
       in Ocaml.VSum (("NameSpaceExtend", [ v1; v2 ]))*)
     ""
   | NameSpaceAnon ((v1, v2)) ->
-      (*let v1 = vof_tok v1
-      and v2 = vof_brace (Ocaml.vof_list vof_declaration_sequencable) v2
+      (*let v1 = process_tok v1
+      and v2 = process_brace (Ocaml.process_list process_declaration_sequencable) v2
       in Ocaml.VSu:m (("NameSpaceAnon", [ v1; v2 ]))*)
     ""
   | EmptyDef def -> ""
