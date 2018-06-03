@@ -189,7 +189,8 @@ tests:
 	$(MAKE) rec && $(MAKE) pfff_test
 	./pfff_test -verbose all
 test:
-	make tests
+	$(MAKE) rec && $(MAKE) pfff_test
+	./pfff_test -verbose all
 
 ##############################################################################
 # Build documentation
