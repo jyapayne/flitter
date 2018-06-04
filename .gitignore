@@ -16,8 +16,8 @@ lang_cpp/parsing/parser_cpp.mli
 lang_cpp/parsing/parser_cpp.output
 h_program-lang/archi_code_lexer.ml
 
-pfff
-pfff_test
+flitter
+flitter_test
 
 # ocamlbuild working directory
 _build/

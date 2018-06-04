@@ -8,7 +8,7 @@ open Common
 (* Purpose *)
 (*****************************************************************************)
 (*
- * A "driver" for the different parsers in pfff.
+ * A "driver" for the different parsers in flitter.
  *)
 
 (*****************************************************************************)
@@ -52,7 +52,7 @@ let test_json_pretty_printer file =
 
 
 (* ---------------------------------------------------------------------- *)
-let pfff_extra_actions () = [
+let flitter_extra_actions () = [
   "-dump_json", " <file>",
   Common.mk_action_1_arg test_json_pretty_printer;
   "-json_pp", " <file>",
@@ -64,7 +64,7 @@ let pfff_extra_actions () = [
 (*****************************************************************************)
 
 let all_actions () =
-  pfff_extra_actions() @
+  flitter_extra_actions() @
   Test_parsing_c.actions()@
   Test_parsing_cpp.actions()@
   Generate_nim.actions()@
@@ -96,7 +96,7 @@ let options () = [
   Common2.cmdline_flags_other () @
   [
     "-version",   Arg.Unit (fun () ->
-      pr2 (spf "pfff version: %s" Config_pfff.version);
+      pr2 (spf "flitter version: %s" Config_flitter.version);
       exit 0;
     ), "  guess what";
   ]

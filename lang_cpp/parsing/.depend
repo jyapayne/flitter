@@ -2,8 +2,8 @@ ast_cpp.cmo : ../../h_program-lang/scope_code.cmi \
     ../../h_program-lang/parse_info.cmi ../../commons/common.cmi
 ast_cpp.cmx : ../../h_program-lang/scope_code.cmx \
     ../../h_program-lang/parse_info.cmx ../../commons/common.cmx
-flag_parsing_cpp.cmo : ../../globals/config_pfff.cmo
-flag_parsing_cpp.cmx : ../../globals/config_pfff.cmx
+flag_parsing_cpp.cmo : ../../globals/config_flitter.cmo
+flag_parsing_cpp.cmx : ../../globals/config_flitter.cmx
 lexer_cpp.cmo : parser_cpp.cmi ../../h_program-lang/parse_info.cmi \
     flag_parsing_cpp.cmo ../../commons/common2.cmi ../../commons/common.cmi \
     ast_cpp.cmo
@@ -182,11 +182,11 @@ type_cpp.cmo : ast_cpp.cmo type_cpp.cmi
 type_cpp.cmx : ast_cpp.cmx type_cpp.cmi
 type_cpp.cmi : ast_cpp.cmo
 unit_parsing_cpp.cmo : parse_cpp.cmi ../../commons/oUnit.cmi \
-    flag_parsing_cpp.cmo ../../globals/config_pfff.cmo \
+    flag_parsing_cpp.cmo ../../globals/config_flitter.cmo \
     ../../commons/common2.cmi ../../commons/common.cmi ast_cpp.cmo \
     unit_parsing_cpp.cmi
 unit_parsing_cpp.cmx : parse_cpp.cmx ../../commons/oUnit.cmx \
-    flag_parsing_cpp.cmx ../../globals/config_pfff.cmx \
+    flag_parsing_cpp.cmx ../../globals/config_flitter.cmx \
     ../../commons/common2.cmx ../../commons/common.cmx ast_cpp.cmx \
     unit_parsing_cpp.cmi
 unit_parsing_cpp.cmi : ../../commons/oUnit.cmi

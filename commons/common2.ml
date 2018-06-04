@@ -5737,7 +5737,7 @@ let add_in_scope_h x (k,v) =
 (* See console.ml *)
 
 (*****************************************************************************)
-(* Gc optimisation (pfff) *)
+(* Gc optimisation (flitter) *)
 (*****************************************************************************)
 
 (* opti: to avoid stressing the GC with a huge graph, we sometimes
@@ -6130,9 +6130,9 @@ let common_prefix_of_files_or_dirs xs =
 (*
 let _ =
   example
-    (common_prefix_of_files_or_dirs ["/home/pad/pfff/visual";
-                                     "/home/pad/pfff/commons";]
-     =*= "/home/pad/pfff"
+    (common_prefix_of_files_or_dirs ["/home/pad/flitter/visual";
+                                     "/home/pad/flitter/commons";]
+     =*= "/home/pad/flitter"
     )
 *)
 

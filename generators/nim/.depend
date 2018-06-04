@@ -8,11 +8,13 @@ generate_nim.cmx : ../../h_program-lang/parse_info.cmx \
     ../../lang_cpp/parsing/ast_cpp.cmx generate_nim.cmi
 generate_nim.cmi : ../../commons/common.cmi
 unit_generate_nim.cmo : ../../commons/oUnit.cmi generate_nim.cmi \
-    ../../lang_cpp/parsing/flag_parsing_cpp.cmo ../../globals/config_pfff.cmo \
-    ../../commons/common2.cmi ../../commons/common.cmi \
-    ../../lang_cpp/parsing/ast_cpp.cmo unit_generate_nim.cmi
+    ../../lang_cpp/parsing/flag_parsing_cpp.cmo \
+    ../../globals/config_flitter.cmo ../../commons/common2.cmi \
+    ../../commons/common.cmi ../../lang_cpp/parsing/ast_cpp.cmo \
+    unit_generate_nim.cmi
 unit_generate_nim.cmx : ../../commons/oUnit.cmx generate_nim.cmx \
-    ../../lang_cpp/parsing/flag_parsing_cpp.cmx ../../globals/config_pfff.cmx \
-    ../../commons/common2.cmx ../../commons/common.cmx \
-    ../../lang_cpp/parsing/ast_cpp.cmx unit_generate_nim.cmi
+    ../../lang_cpp/parsing/flag_parsing_cpp.cmx \
+    ../../globals/config_flitter.cmx ../../commons/common2.cmx \
+    ../../commons/common.cmx ../../lang_cpp/parsing/ast_cpp.cmx \
+    unit_generate_nim.cmi
 unit_generate_nim.cmi : ../../commons/oUnit.cmi

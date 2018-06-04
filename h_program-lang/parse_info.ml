@@ -18,7 +18,7 @@ open Common
 (* Prelude *)
 (*****************************************************************************)
 (*
- * Some helpers for the different lexers and parsers in pfff.
+ * Some helpers for the different lexers and parsers in flitter.
  * The main types are:
  * ('token_location' < 'token_origin' < 'token_mutable') * token_kind
  * 

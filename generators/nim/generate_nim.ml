@@ -942,12 +942,12 @@ and process_fullType ((qualifier, typeC)) =
   process_typeC typeC
 
 and process_toplevel = function
-  | NotParsedCorrectly node ->  ""
+  | NotParsedCorrectly node ->  "# Error parsing: " ^ process_list ~delimiter:"" process_token node
   | DeclElem node -> process_declaration node
   | CppDirectiveDecl node -> process_cpp_directive node
   | IfdefDecl node -> ""
-  | MacroTop ((v1, v2, v3)) -> ""
-  | MacroVarTop ((v1, v2)) -> ""
+  | MacroTop ((v1, v2, v3)) -> "# MacroTop"
+  | MacroVarTop ((v1, v2)) -> "# MacroVarTop"
 
 let iter_ast ast =
   List.map process_toplevel ast

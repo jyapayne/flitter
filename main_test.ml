@@ -64,7 +64,7 @@ let options () = [
   Common2.cmdline_flags_other () @
   [
     "-version",   Arg.Unit (fun () ->
-      pr2 (spf "pfff (test) version: %s" Config_pfff.version);
+      pr2 (spf "flitter (test) version: %s" Config_flitter.version);
       exit 0;
     ),
     "  guess what";

@@ -56,7 +56,7 @@ beforedepend:: archi_code_lexer.ml
 ##############################################################################
 # install
 ##############################################################################
-LIBNAME=pfff-h_program-lang
+LIBNAME=flitter-h_program-lang
 EXPORTSRC=\
   ast_fuzzy.mli \
   meta_ast_generic.mli \

@@ -33,7 +33,7 @@ let unittest =
    (* Parsing *)
    (*-----------------------------------------------------------------------*)
    "regression files" >:: (fun () ->
-     let dir = Filename.concat Config_pfff.path "/tests/cpp/parsing" in
+     let dir = Filename.concat Config_flitter.path "/tests/cpp/parsing" in
      let files =
        Common2.glob (spf "%s/*.cpp" dir) @ Common2.glob (spf "%s/*.h" dir) in
      files +> List.iter (fun file ->
@@ -46,7 +46,7 @@ let unittest =
    );
 
    "rejecting bad code" >:: (fun () ->
-     let dir = Filename.concat Config_pfff.path "/tests/cpp/parsing_errors" in
+     let dir = Filename.concat Config_flitter.path "/tests/cpp/parsing_errors" in
      let files = Common2.glob (spf "%s/*.cpp" dir) in
      files +> List.iter (fun file ->
        try
@@ -61,7 +61,7 @@ let unittest =
 
  (* parsing C files (and not C++ files) possibly containing C++ keywords *)
    "C regression files" >:: (fun () ->
-     let dir = Filename.concat Config_pfff.path "/tests/c/parsing" in
+     let dir = Filename.concat Config_flitter.path "/tests/c/parsing" in
      let files =
        Common2.glob (spf "%s/*.c" dir)
        (* @ Common2.glob (spf "%s/*.h" dir) *) in

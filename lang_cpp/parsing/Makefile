@@ -89,7 +89,7 @@ token_views_context.cmo: token_views_context.ml
 ##############################################################################
 # install
 ##############################################################################
-LIBNAME=pfff-lang_cpp
+LIBNAME=flitter-lang_cpp
 EXPORTSRC=meta_ast_cpp.mli \
    parser_cpp.mli parse_cpp.mli \
    lib_parsing_cpp.mli visitor_cpp.mli \

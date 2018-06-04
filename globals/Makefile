@@ -6,7 +6,7 @@ TOP=..
 ##############################################################################
 TARGET=lib
 
-SRC= config_pfff.ml
+SRC= config_flitter.ml
 
 LIBS=
 INCLUDEDIRS=../commons
@@ -30,17 +30,17 @@ $(TARGET).cmxa: $(OPTOBJS) $(LIBS:.cma=.cmxa)
 	$(OCAMLOPT) -a -o $(TARGET).cmxa $(OPTOBJS)
 
 
-config_pfff.ml:
-	@echo "config_pfff.ml is missing. Have you run ./configure?"
+config_flitter.ml:
+	@echo "config_flitter.ml is missing. Have you run ./configure?"
 	@exit 1
 
 distclean::
-	rm -f config_pfff.ml
+	rm -f config_flitter.ml
 
 ##############################################################################
 # install
 ##############################################################################
-LIBNAME=pfff-config
+LIBNAME=flitter-config
 EXPORTSRC=\
 
 install-findlib: all all.opt

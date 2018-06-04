@@ -17,10 +17,10 @@ open Common2.Infix
 (*****************************************************************************)
 (* Prelude *)
 (*****************************************************************************)
-(* 
+(*
  * A (real) Abstract Syntax Tree for C, not a Concrete Syntax Tree
  * as in ast_cpp.ml.
- * 
+ *
  * This file contains a simplified C abstract syntax tree. The original
  * C/C++ syntax tree (ast_cpp.ml) is good for code refactoring or
  * code visualization; the types used match exactly the source. However,
@@ -32,7 +32,7 @@ open Common2.Infix
 
  * Here is a list of the simplications/factorizations:
  *  - no C++ constructs, just plain C
- *  - no purely syntactical tokens in the AST like parenthesis, brackets, 
+ *  - no purely syntactical tokens in the AST like parenthesis, brackets,
  *    braces, commas, semicolons, etc. No ParenExpr. No FinalDef. No
  *    NotParsedCorrectly. The only token information kept is for identifiers
  *    for error reporting. See name below.
@@ -43,19 +43,19 @@ open Common2.Infix
  *  - sugar is removed, no RecordAccess vs RecordPtAccess, ...
  *  - no init vs expr
  *  - no Case/Default in statement but instead a focused 'case' type
- * 
+ *
  * less: ast_c_simple_build.ml is probably incomplete, but for now
  * is good enough for codegraph purposes on xv6, plan9 and other small C
  * projects.
- * 
- * related work: 
+ *
+ * related work:
  *  - CIL, but it works after preprocessing; it makes it harder to connect
  *    analysis results to tools like codemap. It also does not handle some of
  *    the kencc extensions and does not allow to analyze cpp constructs.
  *    CIL has two pointer analysis but they were written with bug finding
- *    in mind I think, not code comprehension which we really care about 
- *    in pfff.
- *    In the end I thought generating datalog facts for plan9 using lang_c/ 
+ *    in mind I think, not code comprehension which we really care about
+ *    in flitter.
+ *    In the end I thought generating datalog facts for plan9 using lang_c/
  *    was simpler that modifying CIL (moreover fixing lang_cpp/ and lang_c/
  *    to handle plan9 code was anyway needed for codemap).
  *  - SIL's monoidics. SIL looks a bit complicated, but it might be a good
@@ -66,7 +66,7 @@ open Common2.Infix
  *    clang-ocaml though but it's not easily accessible in a findlib
  *    library form yet.
  *  - we could also use the AST used by cc in plan9 :)
- * 
+ *
  * See lang_cpp/parsing/ast_cpp.ml.
  *
  *)
@@ -96,7 +96,7 @@ type type_ =
   | TFunction of function_type
   | TStructName of struct_kind * name
   (* hmmm but in C it's really like an int no? but scheck could be
-   * extended at some point to do more strict type checking! 
+   * extended at some point to do more strict type checking!
    *)
   | TEnumName of name
   | TTypeName of name
@@ -169,7 +169,7 @@ and const_expr = expr
 (* ------------------------------------------------------------------------- *)
 (* Statement *)
 (* ------------------------------------------------------------------------- *)
-type stmt = 
+type stmt =
   | ExprSt of expr
   | Block of stmt list
 
@@ -229,7 +229,7 @@ type struct_def = {
   s_flds: field_def list;
 }
   (* less: could merge with var_decl, but field have no storage normally *)
-  and field_def = { 
+  and field_def = {
    (* less: bitfield annotation
     * kenccext: the option on fld_name is for inlined anonymous structure.
     *)
@@ -250,7 +250,7 @@ type type_def = name * type_
 (* Cpp *)
 (* ------------------------------------------------------------------------- *)
 
-type define_body = 
+type define_body =
   | CppExpr of expr (* actually const_expr when in Define context *)
   (* todo: we want that? even dowhile0 are actually transformed in CppExpr.
    * We have no way to reference a CppStmt in 'stmt' since MacroStmt
@@ -264,10 +264,10 @@ type define_body =
 (* ------------------------------------------------------------------------- *)
 type toplevel =
   | Include of string wrap (* path *)
-  | Define of name * define_body 
+  | Define of name * define_body
   | Macro of name * (name list) * define_body
 
-  (* less: what about ForwardStructDecl? for mutually recursive structures? 
+  (* less: what about ForwardStructDecl? for mutually recursive structures?
    * probably can deal with it by using typedefs as intermediates.
    *)
   | StructDef of struct_def

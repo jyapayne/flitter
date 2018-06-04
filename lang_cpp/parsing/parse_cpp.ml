@@ -255,7 +255,7 @@ let (_defs : (string, Pp_token.define_body) Hashtbl.t)  =
  *)
 let add_defs file =
   if not (Sys.file_exists file)
-  then failwith (spf "Could not find %s, have you set PFFF_HOME correctly?"
+  then failwith (spf "Could not find %s, have you set FLITTER_HOME correctly?"
                    file);
   pr2 (spf "Using %s macro file" file);
   let xs = extract_macros file in

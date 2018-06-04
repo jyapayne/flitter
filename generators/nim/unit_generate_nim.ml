@@ -21,13 +21,13 @@ let strip_string s =
 
 let get_files glob =
   try
-    let path = Filename.concat Config_pfff.path "/tests/generators/nim/" in
+    let path = Filename.concat Config_flitter.path "/tests/generators/nim/" in
     sort (Common2.glob (spf "%s/%s" path glob))
   with
     Common2.CmdError (a, b) -> []
 
 let basename fpath =
-  let fullpath = Filename.concat Config_pfff.path "/tests/generators/nim//" in
+  let fullpath = Filename.concat Config_flitter.path "/tests/generators/nim//" in
   readable ~root:fullpath fpath
 
 let get_code_pairs name =

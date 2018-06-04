@@ -32,7 +32,7 @@ $(TARGET).cmxa: $(OPTOBJS) $(LIBS:.cma=.cmxa)
 ##############################################################################
 # install
 ##############################################################################
-LIBNAME=pfff-h_files-format
+LIBNAME=flitter-h_files-format
 EXPORTSRC=\
   outline.mli
 

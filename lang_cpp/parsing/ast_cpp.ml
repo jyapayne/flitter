@@ -31,7 +31,7 @@
  * and because templates are also qualifiers, almost all types
  * are now mutually recursive ...
  *
- * Like most other ASTs in pfff, it's actually more a Concrete Syntax Tree.
+ * Like most other ASTs in flitter, it's actually more a Concrete Syntax Tree.
  * Some stuff are tagged 'semantic:' which means that they are computed
  * after parsing.
  *

@@ -11,15 +11,15 @@ TOP:=$(shell pwd)
 
 SRC=find_source.ml
 
-TARGET=pfff
+TARGET=flitter
 
 #------------------------------------------------------------------------------
 # Program related variables
 #------------------------------------------------------------------------------
 
-PROGS=pfff
+PROGS=flitter
 
-PROGS+=pfff_test
+PROGS+=flitter_test
 
 OPTPROGS= $(PROGS:=.opt)
 
@@ -158,7 +158,7 @@ distclean:: clean
 	set -e; for i in $(MAKESUBDIRS); do $(MAKE) -C $$i $@; done
 	rm -f .depend
 	rm -f Makefile.config
-	rm -f globals/config_pfff.ml
+	rm -f globals/config_flitter.ml
 	rm -f TAGS
 #	find -name ".#*1.*" | xargs rm -f
 
@@ -178,19 +178,19 @@ purebytecode:
 # codegraph (was pm_depend)
 #------------------------------------------------------------------------------
 
-pfff_test: $(LIBS) $(OBJS) main_test.cmo
+flitter_test: $(LIBS) $(OBJS) main_test.cmo
 	$(OCAMLC) $(CUSTOM) -o $@ $(SYSLIBS) $^
-pfff_test.opt: $(LIBS:.cma=.cmxa) $(OPTOBJS) main_test.cmx
+flitter_test.opt: $(LIBS:.cma=.cmxa) $(OPTOBJS) main_test.cmx
 	$(OCAMLOPT) $(STATIC) -o $@ $(SYSLIBS:.cma=.cmxa) $^
 clean::
-	rm -f pfff_test
+	rm -f flitter_test
 
 tests:
-	$(MAKE) rec && $(MAKE) pfff_test
-	./pfff_test -verbose all
+	$(MAKE) rec && $(MAKE) flitter_test
+	./flitter_test -verbose all
 test:
-	$(MAKE) rec && $(MAKE) pfff_test
-	./pfff_test -verbose all
+	$(MAKE) rec && $(MAKE) flitter_test
+	./flitter_test -verbose all
 
 ##############################################################################
 # Build documentation
@@ -201,7 +201,7 @@ test:
 # Install
 ##############################################################################
 
-VERSION=$(shell cat globals/config_pfff.ml.in |grep version |perl -p -e 's/.*"(.*)".*/$$1/;')
+VERSION=$(shell cat globals/config_flitter.ml.in |grep version |perl -p -e 's/.*"(.*)".*/$$1/;')
 
 # note: don't remove DESTDIR, it can be set by package build system like ebuild
 install: all
@@ -210,7 +210,7 @@ install: all
 	cp -a $(PROGS) $(DESTDIR)$(BINDIR)
 	cp -a data $(DESTDIR)$(SHAREDIR)
 	@echo ""
-	@echo "You can also install pfff by copying the programs"
+	@echo "You can also install flitter by copying the programs"
 	@echo "available in this directory anywhere you want and"
 	@echo "give it the right options to find its configuration files."
 
@@ -222,7 +222,7 @@ INSTALL_SUBDIRS= \
   commons \
   lang_cpp/parsing
 
-LIBNAME=pfff
+LIBNAME=flitter
 install-findlib:: all all.opt
 	ocamlfind install $(LIBNAME) META
 	set -e; for i in $(INSTALL_SUBDIRS); do echo $$i; $(MAKE) -C $$i install-findlib; done
@@ -235,7 +235,7 @@ version:
 
 
 install-bin:
-	cp $(PROGS) ../pfff-binaries/mac
+	cp $(PROGS) ../flitter-binaries/mac
 
 ##############################################################################
 # Package rules
@@ -257,10 +257,10 @@ srctar:
 #http://stackoverflow.com/questions/2689813/cross-compile-windows-64-bit-exe-from-linux
 
 # making an OPAM package:
-# - git push from pfff to github
-# - make a new release on github: https://github.com/facebook/pfff/releases
+# - git push from flitter to github
+# - make a new release on github: https://github.com/facebook/flitter/releases
 # - get md5sum of new archive
-# - update opam file in opam-repository/pfff-xxx/
+# - update opam file in opam-repository/flitter-xxx/
 # - test locally?
 # - commit, git push
 # - do pull request on github

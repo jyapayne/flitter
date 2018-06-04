@@ -2,7 +2,7 @@
 # Variables
 ##############################################################################
 
-# if part of pfff/ or other programs with a Makefile.config
+# if part of flitter/ or other programs with a Makefile.config
 -include ../Makefile.config
 
 LIBNAME=commons
@@ -24,7 +24,7 @@ SYSLIBS=unix.cma str.cma
 
 -include Makefile.common
 
-# too many code in pfff assume commons/lib.cma
+# too many code in flitter assume commons/lib.cma
 all:: lib.cma
 all.opt: lib.cmxa lib.a
 

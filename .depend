@@ -8,14 +8,14 @@ find_source.cmi : commons/common.cmi
 main.cmo : lang_cpp/parsing/test_parsing_cpp.cmi \
     lang_c/parsing/test_parsing_c.cmi external/jsonwheel/json_io.cmi \
     external/jsonwheel/json_in.cmo generators/nim/generate_nim.cmi \
-    lang_cpp/parsing/flag_parsing_cpp.cmo globals/config_pfff.cmo \
+    lang_cpp/parsing/flag_parsing_cpp.cmo globals/config_flitter.cmo \
     commons/common2.cmi commons/common.cmi
 main.cmx : lang_cpp/parsing/test_parsing_cpp.cmx \
     lang_c/parsing/test_parsing_c.cmx external/jsonwheel/json_io.cmx \
     external/jsonwheel/json_in.cmx generators/nim/generate_nim.cmx \
-    lang_cpp/parsing/flag_parsing_cpp.cmx globals/config_pfff.cmx \
+    lang_cpp/parsing/flag_parsing_cpp.cmx globals/config_flitter.cmx \
     commons/common2.cmx commons/common.cmx
 main_test.cmo : generators/nim/unit_generate_nim.cmi commons/oUnit.cmi \
-    globals/config_pfff.cmo commons/common2.cmi commons/common.cmi
+    globals/config_flitter.cmo commons/common2.cmi commons/common.cmi
 main_test.cmx : generators/nim/unit_generate_nim.cmx commons/oUnit.cmx \
-    globals/config_pfff.cmx commons/common2.cmx commons/common.cmx
+    globals/config_flitter.cmx commons/common2.cmx commons/common.cmx
