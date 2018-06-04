@@ -2,7 +2,7 @@ let version = "0.29"
 
 let path =
   try (Sys.getenv "FLITTER_HOME")
-  with Not_found->"/usr/local/share/flitter"
+  with Not_found->"./"
 
 let std_xxx = ref (Filename.concat path "xxx.yyy")
 
