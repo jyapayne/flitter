@@ -46,7 +46,8 @@ let get_code_pairs name =
 let gen_pair_test suite_name ((cfile, test_code), (nim_file, correct_code)) =
   "Test " ^ suite_name ^ ": " ^ (basename cfile) >:: (fun () ->
       let res = compare (strip_string test_code) (strip_string correct_code) == 0 in
-      assert_bool ("Func is wrong: \n\n" ^ test_code ^ "\n\n" ^ correct_code) res
+      assert_bool ("Func is wrong: \n\nGenerated:\n" ^ test_code ^
+                   "\n\nExpected:\n" ^ correct_code) res
     )
 
 let tests suite_name test_file_name =
@@ -65,4 +66,5 @@ let unittest =
     tests "structs" "test_struct" @
     tests "casting" "test_cast" @
     tests "conditionals" "test_conditional" @
+    tests "vars" "test_var" @
     []

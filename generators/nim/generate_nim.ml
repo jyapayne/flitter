@@ -68,8 +68,11 @@ and process_paren _of_a (paren1, arglist, paren2) =
   and paren2 = process_token paren2
   in paren1 ^ arglist ^ paren2
 
-and process_brace _of_a (br1, arglist, br2) =
-  _of_a arglist
+and process_brace ?(include_braces=false) _of_a (br1, arglist, br2) =
+  if include_braces then
+    "{" ^ _of_a arglist ^ "}"
+  else
+    _of_a arglist
 
 and process_bracket _of_a (br1, arglist, br2) =
   let br1 = process_token br1
@@ -83,8 +86,8 @@ and process_angle _of_a (ang1, args, ang2) =
   and ang2 = process_token ang2
   in ang1 ^ args ^ ang2
 
-and process_comma_list _of_a node =
-  process_list (wrap _of_a) node
+and process_comma_list ?(delimiter=", ") _of_a node =
+  process_list ~delimiter:delimiter (wrap _of_a) node
 
 and process_comma_list2 _of_a =
   process_list (process_either _of_a process_token)
@@ -581,15 +584,153 @@ and process_onedecl {
       (fun (name, init) ->
          let name = process_name name
          and init = process_option process_init init
-         in (name, init))
+         in
+         pr (name ^ " " ^ init);
+         (name, init))
       v_namei in
   let res = process_onedeclFullType "" name v_storage v_type in
-  res
+  replace "ptr cchar" "cstring" res
+
+
+and
+  process_class_definition ?(name_override=None) {
+                         c_kind = c_kind;
+                         c_name = c_name;
+                         c_inherit = c_inherit;
+                         c_members = (_, c_members, _)
+                       } =
+  let members =
+    process_list ~delimiter:"\n" process_class_member_sequencable c_members in
+  let _ =
+    process_option
+      (fun (v1, v2) ->
+         let v1 = process_token v1
+         and v2 = process_comma_list process_base_clause v2
+         in v1 ^ v2)
+      c_inherit in
+  let name = match name_override with
+    | None -> process_option process_name c_name
+    | Some x -> x in
+  let _ = wrap2 process_structUnion c_kind in
+  "type\n" ^
+    indent (name ^ " = object\n" ^
+      indent (members))
+
+and
+  process_base_clause {
+                    i_name = v_i_name;
+                    i_virtual = v_i_virtual;
+                    i_access = v_i_access
+                  } =
+  let access = process_option (wrap2 process_access_spec) v_i_access in
+  let virtual_tok = process_option process_token v_i_virtual in
+  let name = process_name v_i_name in
+  name ^ access ^ virtual_tok
+
+and process_access_spec =
+  function
+  | Public -> "*"
+  | Private -> ""
+  | Protected -> ""
+
+and process_exn_spec (v1, v2) =
+  let v1 = process_token v1
+  and v2 = process_paren (process_comma_list2 process_name) v2
+  in v1 ^ v2
+
+and process_method_decl = function
+  | ConstructorDecl ((v1, v2, v3)) ->
+      let (v1, _) = v1
+      and v2 = process_paren (process_comma_list process_parameter) v2
+      and v3 = process_token v3
+      in v1 ^ v2 ^ v3
+  | DestructorDecl ((v1, v2, v3, v4, v5)) ->
+      let v1 = process_token v1
+      and (v2, _) = v2
+      and v3 = process_paren (process_option process_token) v3
+      and v4 = process_option process_exn_spec v4
+      and v5 = process_token v5
+      in v1 ^ v2 ^ v3 ^ v4 ^ v5
+  | MethodDecl ((v1, v2, v3)) ->
+      let v1 = process_onedecl v1
+      and v2 =
+        process_option
+          (fun (v1, v2) ->
+             let v1 = process_token v1
+             and v2 = process_token v2
+             in v1 ^ v2)
+          v2
+      and v3 = process_token v3
+      in v1 ^ v2 ^ v3
+
+and process_template_parameters v =
+  process_angle (process_comma_list process_parameter) v
+
+and process_class_member =
+  function
+  | Access ((v1, v2)) ->
+      let v1 = wrap2 process_access_spec v1
+      and v2 = process_token v2
+      in v1 ^ v2
+  | MemberField (fieldkinds, semi) ->
+      process_comma_list process_fieldkind fieldkinds
+  | MemberFunc v1 ->
+      process_func_or_else v1
+  | MemberDecl v1 ->
+      process_method_decl v1
+  | QualifiedIdInClass ((v1, v2)) ->
+      let v1 = process_name v1
+      and v2 = process_token v2
+      in v1 ^ v2
+  | TemplateDeclInClass v1 ->
+      let v1 =
+        (match v1 with
+         | (v1, v2, v3) ->
+             let v1 = process_token v1
+             and v2 = process_template_parameters v2
+             and v3 = process_declaration v3
+             in v1 ^ v2 ^ v3)
+      in v1
+  | UsingDeclInClass v1 ->
+      let v1 =
+        (match v1 with
+         | (v1, v2, v3) ->
+             let v1 = process_token v1
+             and v2 = process_name v2
+             and v3 = process_token v3
+             in v1 ^ v2 ^ v3)
+      in v1
+  | EmptyField v1 ->
+      process_token v1
+
+and process_fieldkind =
+  function
+  | FieldDecl field_decl ->
+      process_onedecl field_decl
+  | BitField ((v1, v2, v3, v4)) ->
+      let v1 = process_option process_simple_ident v1
+      and v2 = process_token v2
+      and v3 = process_fullType v3
+      and v4 = process_constExpression v4
+      in v1 ^ v2 ^ v3 ^ v4
+
+and process_class_member_sequencable =
+  function
+  | ClassElem elem ->
+      process_class_member elem
+  | CppDirectiveStruct dir_struct ->
+      process_cpp_directive dir_struct
+  | IfdefStruct ifdef_struct ->
+      process_ifdef_directive ifdef_struct
+
 
 and process_onedeclFullType prefix (name, init) storage (qualifier, (typeCbis, tok_list)) =
   match typeCbis with
   | BaseType btype ->
-      process_baseType btype
+    if is_empty(init) then
+      name ^ ": " ^ prefix ^ process_baseType btype
+    else
+      "var " ^ name ^ ": " ^ prefix ^ process_baseType btype ^ " = " ^ init
   | Pointer point ->
       process_onedeclFullType "ptr " (name, init) storage point
   | Reference ref ->
@@ -611,17 +752,21 @@ and process_onedeclFullType prefix (name, init) storage (qualifier, (typeCbis, t
         process_brace (process_comma_list process_enum_elem) elements
       in
       let ty_str = "type " ^ ident ^ " = enum " ^ elements
-      and let_stmt = "\nvar " ^ name ^ ": " ^ ident ^ " " ^ init in
+      and let_stmt = if is_empty(init) then
+          "\nvar " ^ name ^ ": " ^ ident
+        else
+          "\nvar " ^ name ^ ": " ^ ident ^ " = " ^ init in
       if is_empty(name) then ty_str else ty_str ^ let_stmt
   | StructDef sdef ->
-      "" (*process_class_definition sdef*)
+      if is_empty(name) then
+        process_class_definition sdef
+      else
+        process_class_definition ~name_override:(Some name) sdef
   | EnumName ((enum, name)) ->
     process_simple_ident name
-  | StructUnionName ((stype_tok, name)) ->
-      let (stype, _) = stype_tok in
-      let stype = process_structUnion stype
-      and name = process_simple_ident name in
-      stype ^ " " ^ name
+  | StructUnionName ((stype_tok, sname)) ->
+    let sname = process_simple_ident sname in
+    "var " ^ name ^ " = " ^ sname ^ " @ " ^ init
   | TypeName ((tname)) ->
       process_name tname
   | TypenameKwd ((tname (* 'typename' *), tdef_name)) ->
@@ -649,9 +794,8 @@ and process_storageClass =
 and process_init =
   function
   | EqInit ((equals, init)) ->
-      let equals = process_token equals
-      and init = process_initialiser init
-      in equals ^ " " ^ init
+    let init = process_initialiser init
+    in init
   | ObjInit v1 ->
       process_paren (process_comma_list process_argument) v1
 
@@ -779,10 +923,11 @@ and process_labeled =
 
 and process_initialiser =
   function
-  | InitExpr v1 ->
-      process_expression v1
-  | InitList v1 ->
-      process_brace (process_comma_list process_initialiser) v1
+  | InitExpr expr ->
+      process_expression expr
+  | InitList init_list ->
+      process_brace
+        ~include_braces:true (process_comma_list process_initialiser) init_list
   | InitDesignators ((v1, v2, v3)) ->
       let v1 = process_list process_designator v1
       and v2 = process_token v2
